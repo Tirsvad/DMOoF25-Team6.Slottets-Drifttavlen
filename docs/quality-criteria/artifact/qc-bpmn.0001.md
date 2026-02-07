@@ -32,7 +32,7 @@ When evaluating BPMN diagrams, consider the following quality criteria:
 ## Common Patterns for BPMN Markdown Files
 ### Filename Convention
 - Name files in lowercase, using digits for version, following the pattern: `qc-bpmn.xxxx.md` (e.g., `qc-bpmn.0001.md`).
-
+   
 ### Good Example
 ```markdown
 ## Metadata
