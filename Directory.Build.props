@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <!-- Path -->
+  <PropertyGroup>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)g</ArtifactsPath>
+    <!--<SolutionDriveRoot Condition="'$(SolutionDriveRoot)' == '' and '$(SolutionDir)' != ''">$([System.IO.Path]::GetPathRoot('$(SolutionDir)'))</SolutionDriveRoot>
+    <SolutionDriveRoot Condition="'$(SolutionDriveRoot)' == ''">$([System.IO.Path]::GetPathRoot('$(MSBuildProjectDirectory)'))</SolutionDriveRoot>
+    <BaseOutputPath  Condition="'$(BaseOutputPath)' == ''">$([System.IO.Path]::Combine('$(SolutionDir)','g','$(MSBuildProjectName)'))</BaseOutputPath>
+    <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)' == ''">$([System.IO.Path]::Combine('$(BaseOutputPath)','obj'))</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <OutputPath>$([System.IO.Path]::Combine('$(BaseOutputPath)','bin','$(Configuration)'))</OutputPath>
+    <BinOutputPath>$([System.IO.Path]::Combine('$(BaseOutputPath)','bin','$(Configuration)'))</BinOutputPath>
+    <EmitCompilerGeneratedFiles Condition="'$(EmitCompilerGeneratedFiles)' == ''">true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath Condition="'$(CompilerGeneratedFilesOutputPath)' == ''">$([System.IO.Path]::Combine('$(BaseOutputPath)','gen','$(MSBuildProjectName)'))</CompilerGeneratedFilesOutputPath>
+    <GeneratedFilesDestination Condition="'$(GeneratedFilesDestination)' == ''">$(CompilerGeneratedFilesOutputPath)</GeneratedFilesDestination>-->
+  </PropertyGroup>
+</Project>
