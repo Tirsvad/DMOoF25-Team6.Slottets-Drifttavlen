@@ -1,0 +1,32 @@
+services:
+  slottets-sqlserver:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      slottets-dockernet:
+        ipv4_address: 172.29.0.2
+
+# build-stage:
+
+# tests-stage:  
+
+# publish-stage:
+
+volumes:
+  mysql_data:
+
+networks:
+  slottets-dockernet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/24
