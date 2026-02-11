@@ -28,7 +28,7 @@ When evaluating a Use Case, consider the following quality criteria:
 1. **Clarity and Simplicity**: Each use case must be easy to understand, with clear and concise descriptions. Avoid jargon and complex language.
 1. **Completeness**: Ensure that all required sections of the use case are addressed, depending on the type:
    - **Brief**: Use Case Number, Title, short summary, success flow only. Each flow step is numbered (1, 2, 3, ...).
-   - **Casual**: Use Case Number, Title, Actors, Main Flow, main exceptions, summary. Each flow step is numbered. Each exception references the flow step number (e.g., 1.a, 3.a) and includes a paragraph description.
+   - **Casual**: Use Case Number, Title, Actors, Main Flow, main exceptions, summary. Each flow step is numbered. Each exception references the flow step number (e.g., 1a, 3a) and includes a paragraph description.
    - **Fully Dressed**: Use Case Number, Title, Actors, Preconditions, Main Flow, Alternate Flows, Postconditions, Exceptions, Related Requirements. Each flow step is numbered. Each exception references the flow step number and includes a paragraph description.
 
 1. **Relevance**: The information provided in each section should be relevant to the specific use case. Avoid generic statements that do not add value.
@@ -80,12 +80,12 @@ When evaluating a Use Case, consider the following quality criteria:
 - [Insert Actor 1]
 - [Insert Actor 2]
 **Main Flow**:
-1. [Insert Main Flow Step 1]
-2. [Insert Main Flow Step 2]
-3. [Insert Main Flow Step 3]
-**Main Exceptions**:
-1.a [Insert Exception 1]
-3.a [Insert Exception 2]
+1: [Insert Main Flow Step 1]
+2: [Insert Main Flow Step 2]
+3: [Insert Main Flow Step 3]
+**Main Extensions**:
+1a: [Insert Extensions Description 1]
+3a: [Insert Extensions Description 2]
 **Summary**: [Insert casual summary]
 
 ### Fully Dressed Use Case
@@ -104,13 +104,18 @@ When evaluating a Use Case, consider the following quality criteria:
 1. [Insert Main Flow Step 1]
 2. [Insert Main Flow Step 2]
 3. [Insert Main Flow Step 3]
-**Alternate Flows**:
-2.1 [Insert Alternate Flow 1]
-2.2 [Insert Alternate Flow 2]
-**Exceptions**:
-1.a [Insert Exception 1]
-2.2.a [Insert Exception 1]
-3.a [Insert Exception 2]
+**Extensions**:
+
+a: At any time, [Insert Extension Description]  
+b: At any time, [Insert Extension Description]  
+&nbsp;&nbsp;&nbsp;&nbsp;1: [Insert Extension Description]  
+
+1a: At any time, [Insert Extension Description]  
+&nbsp;&nbsp;&nbsp;&nbsp;1: [Insert Extension Description]  
+&nbsp;&nbsp;&nbsp;&nbsp;2: [Insert Extension Description]  
+2a: [Insert Extension Description 1]  
+3a: [Insert Extension Description 2]  
+
 **Postconditions**:
 - [Insert Postcondition 1]
 - [Insert Postcondition 2]
