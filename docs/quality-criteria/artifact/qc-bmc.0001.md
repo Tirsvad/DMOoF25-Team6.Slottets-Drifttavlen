@@ -12,10 +12,10 @@ The Business Model Canvas (BMC) is a strategic management tool that provides a v
 - **Version**: 0001
 - **Date**: 2026-02-07
 
-### Cchange Log
+### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document | Team6         |
+| 2026-02-07 | 0001    | Initial creation of the document |               |
 
 ## Quality Criteria for Business Model Canvas
 When evaluating a Business Model Canvas, consider the following quality criteria:
@@ -38,30 +38,33 @@ When evaluating a Business Model Canvas, consider the following quality criteria
 ## Common Patterns for BMC Markdown Files
 
 ### Filename Convention
-- Name files in lowercase, using digits for version, following the pattern: `qc-bmc.xxxx.md` (e.g., `qc-bmc.0001.md`).
+- Name files in lowercase, using digits for version, following the pattern: `bmc.xxxx.md` (e.g., `bmc.0001.md`).
+- Increment version numbers for significant changes.
+- Include the date and author in the version log.
+- we only keep the latest version in the main branch; archive older versions in a designated folder.
 
 ### Good Example
 ```markdown
+# Business Model Canvas Components (BMC) for [Insert Project Name]
+
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | QC-BMC                            |
+| Id                | BMC                               |
 | crossReference    |                                   |
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-01-20
+- **Date**: [insert todays date]
 
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0001    | 2026-01-20 | Initial                  | project owner |
+| 0001    | [insert todays date] | Initial                  | project owner |
 ```
 
 ### Table Layout Template
 ```markdown
-## Business Model Canvas Components
-
 <!-- Business Model Canvas Template: Replace all [Insert ...] placeholders with project-specific content. -->
 <table border="1" width="100%" height="600px" style="border-collapse: collapse; vertical-align: top;">
   <!-- Upper Section -->

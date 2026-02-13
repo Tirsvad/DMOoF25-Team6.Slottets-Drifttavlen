@@ -15,7 +15,7 @@ For this project, sequence diagrams must be written in Mermaid syntax for consis
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document | Team6         |
+| 2026-02-07 | 0001    | Initial creation of the document |               |
 
 ## Quality Criteria for Sequence Diagram
 When evaluating a Sequence Diagram, consider the following quality criteria:
@@ -29,24 +29,24 @@ When evaluating a Sequence Diagram, consider the following quality criteria:
 ## Common Patterns for Sequence Diagram Markdown Files
 
 ### Filename Convention
-- Name files in lowercase, using digits for version, following the pattern: `sd.xxxx.md` (e.g., `sd.0001.md`).
+- Name files in lowercase, using digits for version, following the pattern: `sd.uc-yyy.xxxx.md` (e.g., `sd.uc-001.0001.md`) where `yyy` is the use case number.
 
 ### Good Example
 ```markdown
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | QC-SEQDIAGRAM                     |
+| Id                | SD                                |
 | crossReference    |                                   |
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-02-07
+- **Date**: [insert todays date]
 
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0001    | 2026-02-07 | Initial                  | project owner |
+| 0001    | [insert todays date] | Initial                  | [insert author name] |
 
 ## Sequence Diagram
 ```

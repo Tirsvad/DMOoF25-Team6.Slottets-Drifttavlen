@@ -21,7 +21,7 @@ Use cases can be documented in three forms:
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document | Team6         |
+| 2026-02-07 | 0001    | Initial creation of the document |               |
 
 ## Quality Criteria for Use Case Documentation
 When evaluating a Use Case, consider the following quality criteria:
@@ -43,6 +43,8 @@ When evaluating a Use Case, consider the following quality criteria:
 
 ### Good Example
 ```markdown
+# Use Case Description: Use Case 001 - [Insert Title]
+
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
@@ -51,12 +53,13 @@ When evaluating a Use Case, consider the following quality criteria:
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-01-20
+- **Date**: [insert todays date]
 
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0001    | 2026-01-20 | Initial                  | project owner |
+| 0001    | [insert todays date] | Initial                  | [insert author name] |
+
 ```
 
 ### Table Layout Template

@@ -15,7 +15,7 @@ SSDs clarify system boundaries, events, and responses, supporting requirements a
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document | Team6         |
+| 2026-02-07 | 0001    | Initial creation of the document |               |
 
 ## Quality Criteria for System Sequence Diagram
 When evaluating a System Sequence Diagram, consider the following quality criteria:
@@ -28,24 +28,25 @@ When evaluating a System Sequence Diagram, consider the following quality criter
 ## Common Patterns for SSD Markdown Files
 
 ### Filename Convention
-- Name files in lowercase, using digits for version, following the pattern: `qc-ssd.xxxx.md` (e.g., `qc-ssd.0001.md`).
+- Name files in lowercase, using digits for version, following the pattern: `ssd.uc-yyy.xxxx.md` (e.g., `ssd.uc-001.0001.md`) where `yyy` is the use case number.
 
 ### Good Example
 ```markdown
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | QC-SSD                            |
+| Id                | SSD                               |
 | crossReference    |                                   |
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-01-20
+- **Date**: [insert todays date]
 
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0001    | 2026-01-20 | Initial                  | project owner |
+| 0001    | [insert todays date] | Initial                  | [insert author name] |
+
 
 ## System Sequence Diagram
 ```

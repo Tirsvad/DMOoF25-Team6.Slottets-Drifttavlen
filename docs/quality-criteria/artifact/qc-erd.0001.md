@@ -15,7 +15,7 @@ ERDs visually represent entities, their attributes, and relationships, providing
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-11 | 0001    | Initial creation of the document | Team6         |
+| 2026-02-11 | 0001    | Initial creation of the document |               |
 
 ## Quality Criteria for Entity Relationship Diagrams
 When evaluating an ERD, consider the following quality criteria:
@@ -28,24 +28,27 @@ When evaluating an ERD, consider the following quality criteria:
 ## Common Patterns for ERD Markdown Files
 
 ### Filename Convention
-- Name files in lowercase, using digits for version, following the pattern: `qc-erd.xxxx.md` (e.g., `qc-erd.0001.md`).
+- Name files in lowercase, using digits for version, following the pattern: `erd.xxxx.md` (e.g., `erd.0001.md`).
+  - If under a use case folder, use the pattern: `erd.uc-yyy.xxxx.md` where `yyy` is the use case number.
 
 ### Good Example
 ```markdown
+# Entity Relationship Diagram: [Insert Project or UseCase]
+
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | QC-ERD                            |
+| Id                | ERD                               |
 | crossReference    |                                   |
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-01-20
+- **Date**: [insert todays date]
 
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0001    | 2026-01-20 | Initial                  | project owner |
+| 0001    | [insert todays date] | Initial                  | [insert author name] |
 ```
 
 ### Table Layout Template
@@ -53,17 +56,22 @@ When evaluating an ERD, consider the following quality criteria:
 %% Entity Relationship Diagram Template: Replace all [Insert ...] placeholders with project-specific content.
 erDiagram
     [Entity1] {
-        string [Attribute1]
+        Guid [Id] PK
+        Guid [Entity3Id] FK
+        nvarchar [Attribute1]
         int [Attribute2]
-        string [Attribute3]
+        nvarchar [Attribute3]
     }
     [Entity2] {
-        string [Attribute1]
-        int [Attribute2]
+        Guid [Id] PK
+        Guid [Entity1Id] FK
+        nvarchar [Attribute1]
+        int [Attribute2] "Unique"
     }
     [Entity3] {
-        string [Attribute1]
-        string [Attribute2]
+        Guid [Id] PK
+        nvarchar [Attribute1]
+        nvarchar [Attribute2]
     }
     [Entity1] ||--o{ [Entity2] : [Relationship1]
     [Entity2] ||--|{ [Entity3] : [Relationship2]

@@ -1,7 +1,7 @@
 
 ---
 description: 'Entity Relationship Diagram (ERD) quality requirements and template for project documentation.'
-applyTo: '**/qc-erd.*.md'
+applyTo: '**/erd.*.md'
 ---
 
 # Entity Relationship Diagram (ERD) Instructions
@@ -29,15 +29,19 @@ Use this as a starting point for any project requiring an ERD. Replace all place
 - Use the provided Mermaid diagram layout for consistency.
 
 ### File Naming
-- Name files in lowercase, using digits for version, following the pattern: `qc-erd.xxxx.md` (e.g., `qc-erd.0001.md`).
+- Name files in lowercase, using digits for version, following the pattern: `erd.xxxx.md` (e.g., `erd.0001.md`).
+- Increment version numbers for significant changes.
+- Include the date and author in the version log.
+- we only keep the latest version in the main branch; archive older versions in a designated folder.
 
 ## Common Patterns
 ### Good Example
 ```markdown
+# Entity Relationship Diagram (ERD) for [Insert Project Name]
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | QC-ERD                            |
+| Id                | ERD                               |
 | crossReference    |                                   |
 
 ## Version

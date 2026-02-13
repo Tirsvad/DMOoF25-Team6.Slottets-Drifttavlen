@@ -1,5 +1,6 @@
 # Quality Criteria for BPMN Diagrams
-The Business Process Model and Notation (BPMN) is a standardized graphical representation for modeling business processes. BPMN diagrams help organizations visualize their workflows, making it easier to understand, analyze, and improve business processes.
+The Business Process Model and Notation (BPMN) is a standardized graphical representation for modeling business processes.
+BPMN diagrams help organizations visualize their workflows, making it easier to understand, analyze, and improve business processes.
 
 ## Metadata
 | Key               | Value                             |
@@ -38,14 +39,18 @@ When evaluating BPMN diagrams, consider the following quality criteria:
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | QC-BPMN                           |
+| Id                | BPMN                              |
 | crossReference    |                                   |
+
 ## Version
 - **Version**: 0001
-- **Date**: 2026-01-20
+- **Date**: [insert todays date]
+
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0001    | 2026-01-20 | Initial                  | project owner |
-```
+| 0001    | [insert todays date] | Initial                  | [insert author name] |
 
+## Diagram
+<img src="[insert diagram file path or URL]" alt="BPMN Diagram" />
+```
