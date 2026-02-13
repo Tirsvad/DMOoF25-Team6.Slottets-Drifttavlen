@@ -10,17 +10,17 @@ A well-designed Domain Model provides clarity, supports maintainability, and ens
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-02-11
+- **Date**: 2026-02-13
 
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-11 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |   Team6            |
 
 ## Quality Criteria for Domain Models
 When evaluating a Domain Model, consider the following quality criteria:
 1. **Clarity and Simplicity**: The Domain Model should be easy to interpret, with clear class/entity names, attribute labels, and relationship definitions. Avoid unnecessary complexity and ambiguous notation.
-2. **Completeness**: All relevant business entities, attributes, and relationships must be included. Ensure that key business rules and constraints are properly represented.
+2. **Completeness**: All relevant business entities, attributes, multiplicity and relationships must be included. Ensure that key business rules and constraints are properly represented.
 3. **Correctness**: The model must accurately reflect the intended business domain and requirements. Entity and relationship definitions should be precise and unambiguous.
 4. **Consistency**: Naming conventions, symbols, and layout should be consistent throughout the model. Relationships should logically connect entities as per requirements.
 5. **Visual Appeal**: The Domain Model should be visually organized and easy to navigate. Use layout techniques, grouping, and clear diagrams to enhance readability and engagement.
@@ -85,4 +85,9 @@ classDiagram
 ## Maintenance
 - Update the version and change log for major changes.
 - Regularly review Domain Models for accuracy and relevance.
+
+
+## Language
+- Professional
+- Translate to Danish 
 

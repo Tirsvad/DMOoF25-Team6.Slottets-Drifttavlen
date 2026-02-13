@@ -15,7 +15,7 @@ ERDs visually represent entities, their attributes, and relationships, providing
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-11 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |    Team 6        |
 
 ## Quality Criteria for Entity Relationship Diagrams
 When evaluating an ERD, consider the following quality criteria:
@@ -58,20 +58,20 @@ erDiagram
     [Entity1] {
         Guid [Id] PK
         Guid [Entity3Id] FK
-        nvarchar [Attribute1]
+        string [Attribute1]
         int [Attribute2]
-        nvarchar [Attribute3]
+        string [Attribute3]
     }
     [Entity2] {
         Guid [Id] PK
         Guid [Entity1Id] FK
-        nvarchar [Attribute1]
+        string [Attribute1]
         int [Attribute2] "Unique"
     }
     [Entity3] {
         Guid [Id] PK
-        nvarchar [Attribute1]
-        nvarchar [Attribute2]
+        string [Attribute1]
+        string [Attribute2]
     }
     [Entity1] ||--o{ [Entity2] : [Relationship1]
     [Entity2] ||--|{ [Entity3] : [Relationship2]
@@ -85,3 +85,10 @@ erDiagram
 ## Maintenance
 - Update the version and change log for major changes.
 - Regularly review ERDs for accuracy and relevance.
+
+
+## Language
+
+- Professional
+- English
+ 

@@ -15,11 +15,11 @@ SSDs clarify system boundaries, events, and responses, supporting requirements a
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |      Team 6         |
 
 ## Quality Criteria for System Sequence Diagram
 When evaluating a System Sequence Diagram, consider the following quality criteria:
-1. **Clarity and Simplicity**: The SSD should be easy to interpret, with clear actor and system boundaries. Use concise event names and avoid unnecessary complexity.
+1. **Clarity and Simplicity**: The SSD should be easy to interpret, with clear actor role and system boundaries. Use concise event names and avoid unnecessary complexity.
 2. **Completeness**: All relevant interactions for the use case must be included, showing each event and system response.
 3. **Relevance**: Events and responses should be specific to the use case and system context.
 4. **Consistency**: The SSD should align with use case descriptions and other requirements artifacts.
@@ -70,3 +70,7 @@ sequenceDiagram
 ## Maintenance
 - Update the version and change log for major changes.
 - Regularly review SSDs for accuracy and relevance.
+
+## Language 
+- Professional
+- Translate to Danish

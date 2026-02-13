@@ -15,7 +15,7 @@ DCDs visually represent classes, their attributes, methods, and relationships, p
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-11 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |   Team 6           |
 
 ## Quality Criteria for Design Class Diagrams
 When evaluating a DCD, consider the following quality criteria:
@@ -69,6 +69,16 @@ classDiagram
     [Class1] o-- [Class3] : [Association]
     [Class2] *-- [Class4] : [Composition]
 ```
+## accepted parts of the DCD syntax:
+<|--	Inheritance
+*--	Composition
+o--	Aggregation
+-->	Association
+--	Link (Solid)
+..>	Dependency
+..|>	Realization
+..	Link (Dashed
+
 
 ## Validation
 - Review DCDs for completeness, clarity, and correct use of the template.
@@ -78,3 +88,6 @@ classDiagram
 - Update the version and change log for major changes.
 - Regularly review DCDs for accuracy and relevance.
 
+## Language 
+- Professional
+- English

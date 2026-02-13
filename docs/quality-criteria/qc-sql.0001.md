@@ -8,12 +8,12 @@ This includes aspects such as code readability, performance, security, and adher
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-02-07
+- **Date**: 2026-02-13
 
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |     team 6   |
 
 ## MSSQL Quality Criteria
 - **Naming conventions**: Use PascalCase for naming tables, columns, procedures and other database objects (e.g., `CustomerOrder`, `GetCustomerById`).
