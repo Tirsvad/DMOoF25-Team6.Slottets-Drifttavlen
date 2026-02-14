@@ -10,12 +10,12 @@ For this project, sequence diagrams must be written in Mermaid syntax for consis
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-02-07
+- **Date**: 2026-02-13
 
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-02-07 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |  Team 6      |
 
 ## Quality Criteria for Sequence Diagram
 When evaluating a Sequence Diagram, consider the following quality criteria:
@@ -74,3 +74,9 @@ sequenceDiagram
 ## Maintenance
 - Update the version and change log for major changes.
 - Regularly review sequence diagrams for accuracy and relevance.
+
+
+## Language
+- Professional
+- English
+ 

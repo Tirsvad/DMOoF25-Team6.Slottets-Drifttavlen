@@ -8,12 +8,12 @@ The CSharp Code quality criteria focus on ensuring that C# code is well-structur
 
 ## Version
 - **Version**: 0001
-- **Date**: 2026-02-07
+- **Date**: 2026-02-13
 
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
-| 2026-26-07 | 0001    | Initial creation of the document |               |
+| 2026-02-13 | 0001    | Initial creation of the document |    team 6    |
 
 ## General Criteria
 - **Encoding**: All C# files must use UTF-8 encoding without BOM (Byte Order Mark).
@@ -33,6 +33,30 @@ The CSharp Code quality criteria focus on ensuring that C# code is well-structur
 - **Parameters**: Parameter names must use camelCase and describe the purpose of the parameter (e.g., `userName`).
 - **Variables**: Variable names must use camelCase and describe their purpose (e.g., `totalAmount`).
 - **Private fields**: Private field names must use camelCase and start with an underscore (e.g., `_firstName`).
+
+### Class Naming & Responsibility
+- Use descriptive names; follow Single Responsibility Principle
+- **Mapper**: Transforms one object to another
+- **Service**: Performs operations with side effects or orchestration, may have state
+- **Manager**: Methods for a context, no state outside injected classes, business logic not in domain model
+- **Handler**: Responds to requests, executes business logic via other classes
+- **Helper**: Static, pure functions, no state, very small
+
+
+### Formatting
+- Apply code-formatting style defined in `.editorconfig`.
+- Prefer file-scoped namespace declarations and single-line using directives.
+- Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
+- Ensure that the final return statement of a method is on its own line.
+- Use pattern matching and switch expressions wherever possible.
+- Use `nameof` instead of string literals when referring to member names.
+- Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>` documentation in the comments.
+
+
+### Nullable Reference Types
+- Declare variables non-nullable, and check for `null` at entry points.
+- Always use `is null` or `is not null` instead of `== null` or `!= null`.
+- Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
 
 ### Code Quality
 - **Method length**: Methods should not exceed 30 lines of code. If a method becomes too long, it should be split into smaller, more focused methods.
