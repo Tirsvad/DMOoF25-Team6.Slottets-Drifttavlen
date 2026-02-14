@@ -15,11 +15,20 @@ services:
       slottets-dockernet:
         ipv4_address: 172.29.0.2
 
-# build-stage:
+  build-stage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    restart: "no"
 
 # tests-stage:  
 
-# publish-stage:
+  publish-stage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: publish
 
 volumes:
   mysql_data:
