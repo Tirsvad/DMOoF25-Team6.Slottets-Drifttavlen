@@ -3,28 +3,20 @@
 
 namespace Domain.Tests;
 
-[TestClass]
-public sealed class Test1
+[Collection("Basic collection")]
+public sealed class Test1 : IDisposable
 {
-    [TestInitialize]
-    public void TestInit()
-    {
-        // This method is called before each test method.
-    }
-
-    [TestCleanup]
-    public void TestCleanup()
-    {
-        // This method is called after each test method.
-    }
-
-    [TestMethod]
+    [Fact(DisplayName = "Simple Addition Test")]
     public void SimpleAdditionTest()
     {
         // Assert that basic arithmetic works as expected.
         int testvar = 2 + 2;
 
         // Test that 2 + 2 equals 4
-        Assert.AreEqual(4, testvar);
+        Assert.Equal(4, testvar);
+    }
+
+    public void Dispose()
+    {
     }
 }
