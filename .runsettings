@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <MSTest>
-    <Parallelize>
-      <Scope>ClassLevel</Scope>
-      <Workers>0</Workers>
-    </Parallelize>
-  </MSTest>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">

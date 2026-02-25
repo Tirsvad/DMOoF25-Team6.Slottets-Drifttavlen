@@ -95,10 +95,9 @@ applyTo: '**/*.cs'
 - Explain how to monitor API performance, errors, and usage patterns.
 
 ## Testing
-
+- Use xunit v3 for testing, and Moq for mocking dependencies.
 - Always include test cases for critical paths of the application.
 - Guide users through creating unit tests.
-- Use mstest for testing, and Moq for mocking dependencies.
 - Do emit "Act", "Arrange" or "Assert" comments.
 - Copy existing style in nearby files for test method names and capitalization.
 - Explain integration testing approaches for API endpoints.

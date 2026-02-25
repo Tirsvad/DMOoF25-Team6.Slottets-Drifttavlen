@@ -1,3 +1,4 @@
+
 services:
   slottets-sqlserver:
     image: mysql
@@ -12,8 +13,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      slottets-dockernet:
-        ipv4_address: 10.29.0.2
+      vlan-db:
+        ipv4_address: 10.29.10.10
+
+      # vlan-app:
 
   build-stage:
     build:
@@ -22,10 +25,10 @@ services:
       target: build-stage
     restart: "no"
     networks:
-      slottets-dockernet:
-        ipv4_address: 10.29.0.5
+      vlan-db:
+      # vlan-app:
 
-  tests-stage:  
+  tests-stage:
     build:
       context: .
       dockerfile: Dockerfile
@@ -33,12 +36,14 @@ services:
     depends_on:
       slottets-sqlserver:
         condition: service_started
+      build-stage:
+        condition: service_completed_successfully
     working_dir: /workspace
     volumes:
       - ./TestResults:/artifacts/TestResults
     networks:
-      slottets-dockernet: 
-        ipv4_address: 10.29.0.10
+      vlan-db:
+      # vlan-app:
     environment:
       - DOTNET_RUNNING_IN_CONTAINER=true
       - DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -73,16 +78,29 @@ services:
     ports:
       - "5000:5000"
     networks:
-      slottets-dockernet:
-        ipv4_address: 10.29.0.30
+      # vlan-app:
+      #   ipv4_address: 10.29.0.10
+      vlan-web:
+          ipv4_address: 10.29.30.10
+
     restart: "no"
 
 volumes:
   mysql_data:
 
 networks:
-  slottets-dockernet:
+  vlan-db:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.29.0.0/24
+        - subnet: 10.29.10.0/24
+  # vlan-app:
+  #   driver: bridge
+  #   ipam:
+  #     config:
+  #       - subnet: 10.29.20.0/24
+  vlan-web:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.29.30.0/24
