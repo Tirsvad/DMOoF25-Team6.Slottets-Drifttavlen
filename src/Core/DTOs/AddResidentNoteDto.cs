@@ -5,4 +5,8 @@ namespace Core.DTOs;
 
 public class AddResidentNoteDto
 {
+    public Guid ResidentId { get; set; }
+    public string NoteText { get; set; } = string.Empty;
+
+
 }
