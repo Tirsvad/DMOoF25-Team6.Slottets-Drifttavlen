@@ -12,7 +12,9 @@ Use this as a starting point for any project requiring an SSD. Replace all place
 - Replace all bracketed placeholders in the diagram with project-specific information.
 - Store SSD files in the centralized repository.
 - Review and approve SSDs with relevant stakeholders before acceptance.
-
+- If product owner domain language is different from English, create a separate file for the diagram content in that language while maintaining English for metadata and versioning. Use a language code suffix in the file name , following the pattern: `uc-<use case identifier>.ssd.<version>.da.md` for Danish). See Product Owner Domain Language in `docs/bc.xxxx.md` for more details.
+- Make or update Glossary entries for any new terms introduced in the use case documentation that changes name / language terms. File naming pattern for glossary entries: `glossary.<language code>.md` (e.g., `glossary.da.md`´for danish or `glossary.md` for English).
+- 
 ## Best Practices
 - Clearly define all actors, system boundaries, events, and responses.
 - Use clear, concise, and system-oriented language.
