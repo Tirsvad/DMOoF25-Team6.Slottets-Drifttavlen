@@ -9,7 +9,7 @@
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|
-| 0002    | 2026-03-20 | Add UC003.DM             | Team 6     |
+| 0003    | 2026-03-20 | Add WasGivenAtTimestamp to PainkillerAdministration | Team 6     |
 
 ## Diagram
 ```mermaid
@@ -32,11 +32,11 @@ classDiagram
     }
     class PainkillerAdministration {
         PainkillerType
-        Timestamp
+        WasGivenAtTimestamp
         NextAllowedTimespan
     }
-    Resident "1" o-- "0..*" ResidentNote : has
-    Resident "0..*" --* "1" TrafficLight : status
+    Resident "1" -- "0..*" ResidentNote : has
+    Resident "0..*" -- "1" TrafficLight : status
     Resident "1" -- "*" MedicineAdministration : receives
     Resident "1" -- "*" PainkillerAdministration : receives
 ```
@@ -47,5 +47,5 @@ classDiagram
 - Resident has a traffic light status (TrafficLight) indicating current condition (Green, Yellow, Red).
 - Resident can have multiple notes (ResidentNote), each with text, timestamp, and caretaker reference.
 - Resident can have multiple medicine administration records (MedicineAdministration) with timestamp and status (WasGiven).
-- Resident can have multiple painkiller administration records (PainkillerAdministration) with painkiller type, timestamp, and next allowed timespan.
+- Resident can have multiple painkiller administration records (PainkillerAdministration) with painkiller type, timestamp, was given at timestamp, and next allowed timespan.
 - Initials are used for resident identification to ensure GDPR compliance.
