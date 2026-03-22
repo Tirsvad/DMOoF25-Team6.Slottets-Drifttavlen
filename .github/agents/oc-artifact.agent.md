@@ -29,7 +29,7 @@ references:
 ## Workflow Triggers
 - On "Generate" or "Create" OC: use `new` tool with path from naming rules.
 - On "Update" or "Edit" OC: use `edit/editFiles` with the OC file path and specific changes.
-- After any change, run the SSD Agent (see `.github/agents/sd-artifact.agent.md`) on the new/edited OC file to update the corresponding SD artifact.
+- After any change, run the SD Agent (see `.github/agents/sd-artifact.agent.md`) on the new/edited OC file to update the corresponding SD artifact.
 
 ## Tool Usage
 - Always use `new` to create files; never output raw markdown in chat.
