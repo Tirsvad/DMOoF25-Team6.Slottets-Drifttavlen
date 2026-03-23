@@ -1,5 +1,5 @@
 ---
-Description: This agent is responsible for generating System Sequence Diagrams (SSDs) based on the requirements and interactions defined in the system. It will analyze the use cases and interactions to create visual representations of the system's behavior, which can be used for documentation and communication among stakeholders.
+Description: Generates, validates, and maintains System Sequence Diagrams (SSDs)  documentation in markdown and diagram in mermaid, following strict content, structure, and naming conventions for clarity and consistency.
 name: System Sequence Diagram (SSD) Agent
 tools: 
   - new
