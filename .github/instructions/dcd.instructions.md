@@ -38,7 +38,7 @@ This instruction file provides a template and quality criteria for documenting D
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|
-| Id                | [Use case identifier].DCD         |
+| Id                | [Use case identifier].DCD            |
 | crossReference    |                                   |
 
 ## Version Log
