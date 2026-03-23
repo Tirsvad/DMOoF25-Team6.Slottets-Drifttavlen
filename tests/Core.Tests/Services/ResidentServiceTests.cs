@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
+using Core.Interfaces.ApiClients;
 using Core.Interfaces.Repositories;
 using Core.Services;
 
@@ -14,11 +15,13 @@ public class ResidentServiceTests
 {
     private readonly Mock<IResidentRepository> _mockRepo;
     private readonly ResidentService _service;
+    private readonly Mock<IResidentApiClient> _mockApiClient;
 
     public ResidentServiceTests()
     {
         _mockRepo = new Mock<IResidentRepository>();
-        _service = new ResidentService(_mockRepo.Object);
+        _mockApiClient = new Mock<IResidentApiClient>();
+        _service = new ResidentService(_mockRepo.Object, _mockApiClient.Object);
     }
 
     [Fact]
@@ -26,7 +29,9 @@ public class ResidentServiceTests
     {
         Guid id = Guid.NewGuid();
         Resident resident = new() { Id = id, Initials = "AB" };
-        _ = _mockRepo.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(resident);
+
+        //mock the Api client
+        _ = _mockApiClient.Setup(a => a.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(resident);
 
         Resident? result = await _service.GetByIdAsync(id, TestContext.Current.CancellationToken);
 
@@ -37,7 +42,8 @@ public class ResidentServiceTests
     public async Task GetAllAsync_ReturnsResidents()
     {
         List<Resident> residents = [new Resident { Id = Guid.NewGuid(), Initials = "CD" }];
-        _ = _mockRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(residents);
+
+        _ = _mockApiClient.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(residents);
 
         IEnumerable<Resident> result = await _service.GetAllAsync(TestContext.Current.CancellationToken);
 
