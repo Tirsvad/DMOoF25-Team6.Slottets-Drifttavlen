@@ -29,8 +29,8 @@ public class ResidentNoteServiceTests
         var residentId = Guid.NewGuid();
         var notes = new List<ResidentNote>
         {
-            new ResidentNote { Id = Guid.NewGuid(), ResidentId = residentId, Note = "Note 1" },
-            new ResidentNote { Id = Guid.NewGuid(), ResidentId = residentId, Note = "Note 2" }
+            new ResidentNote { Id = Guid.NewGuid(), ResidentId = residentId, Content = "Note 1" },
+            new ResidentNote { Id = Guid.NewGuid(), ResidentId = residentId, Content = "Note 2" }
         };
         _mockRepo.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
           .ReturnsAsync(notes);

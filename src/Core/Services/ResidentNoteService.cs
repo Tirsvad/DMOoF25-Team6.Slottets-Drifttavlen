@@ -29,7 +29,8 @@ public class ResidentNoteService : IResidentNoteService
         {
             Id = Guid.NewGuid(),
             ResidentId = residentId,
-            Note = noteText
+            Content = noteText,
+            CreatedAt = DateTime.UtcNow
         };
         await _residentNoteRepository.AddAsync(note, cancellationToken);
         return true;
