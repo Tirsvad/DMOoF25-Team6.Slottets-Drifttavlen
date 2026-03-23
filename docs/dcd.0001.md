@@ -33,8 +33,8 @@ classDiagram
       Red
     }
     class ResidentNote {
-      +Content: string
-      +CreatedAt: DateTime
+      +Note: string
+      +EditedAt: DateTime
     }
   }
 
