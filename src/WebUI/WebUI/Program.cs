@@ -65,7 +65,7 @@ public class Program
             _ = app.UseHsts();
         }
 
-        _ = app.UseHttpsRedirection();
+        // _ = app.UseHttpsRedirection();
 
         _ = app.UseStaticFiles();
         _ = app.UseAntiforgery();
