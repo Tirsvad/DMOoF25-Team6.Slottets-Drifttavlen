@@ -5,6 +5,8 @@ using Core.Interfaces.Repositories;
 
 using Domain.Interfaces;
 
+using Infrastructure.Persistents;
+
 namespace Infrastructure.Repositories;
 
 /// <summary>
@@ -30,9 +32,11 @@ namespace Infrastructure.Repositories;
 /// </code>
 /// </example>
 /// </summary>
-public abstract class Repository<TEntity>() : IRepository<TEntity>
+public abstract class Repository<TEntity>(AppDbContext context) : IRepository<TEntity>
     where TEntity : class, IEntity
 {
+    protected readonly AppDbContext _context = context;
+
     /// <inheritdoc/>
     public IEnumerable<TEntity> Entities { get; set; } = [];
 
@@ -41,7 +45,7 @@ public abstract class Repository<TEntity>() : IRepository<TEntity>
     {
         entity.Id = Guid.NewGuid();
         Entities = Entities.Append(entity);
-        return entity;
+        return await Task.FromResult(entity);
     }
 
     /// <inheritdoc/>
@@ -52,13 +56,14 @@ public abstract class Repository<TEntity>() : IRepository<TEntity>
         {
             _ = await AddAsync(entity, cancellationToken);
         }
-        return entitiesList.AsEnumerable();
+        return await Task.FromResult(entitiesList.AsEnumerable());
     }
 
     /// <inheritdoc/>
     public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         Entities = Entities.Where(e => e.Id != entity.Id);
+        await Task.CompletedTask;
     }
 
     /// <inheritdoc/>
@@ -68,24 +73,26 @@ public abstract class Repository<TEntity>() : IRepository<TEntity>
         {
             Entities = Entities.Where(e => e.Id != entity.Id);
         }
+        await Task.CompletedTask;
     }
 
     /// <inheritdoc/>
     public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return Entities;
+        return await Task.FromResult(Entities);
     }
 
     /// <inheritdoc/>
     public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return Entities.FirstOrDefault(e => e.Id == id);
+        return await Task.FromResult(Entities.FirstOrDefault(e => e.Id == id));
     }
 
     /// <inheritdoc/>
     public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         Entities = Entities.Select(e => e.Id == entity.Id ? entity : e);
+        await Task.CompletedTask;
     }
 
     /// <inheritdoc/>
@@ -95,5 +102,6 @@ public abstract class Repository<TEntity>() : IRepository<TEntity>
         {
             Entities = Entities.Select(e => e.Id == entity.Id ? entity : e);
         }
+        await Task.CompletedTask;
     }
 }

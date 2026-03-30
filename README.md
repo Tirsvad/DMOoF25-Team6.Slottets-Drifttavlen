@@ -88,46 +88,11 @@ Se `docs/` for:
 
 ---
 
-## Folder Structure & Responsibilities
-
-Løsningen følger Clean Architecture-principper og er organiseret således:
-
-```
-├── src/                # Al produktionskode
-│   ├── Core/           # Kerne forretningslogik (use cases, interfaces)
-│   ├── Domain/         # Domænemodeller og forretningsenheder
-│   ├── Infrastructure/ # Infrastruktur (dataadgang, eksterne services)
-│   └── WebUI/          # Blazor frontend (UI og klientlogik)
-├── tests/              # Alle testprojekter, spejler src/ strukturen
-├── docs/               # Dokumentation (arkitektur, use cases, analyse)
-├── LocalNuget/         # Lokale NuGet-pakker
-├── .github/            # GitHub workflows og Copilot-instruktioner
-├── docker-compose.yml  # Docker Compose-konfiguration
-├── Directory.Build.props/targets # Løsningsdækkende MSBuild-indstillinger
-├── Slottet.CareManagement.slnx # Løsningsfil
-└── global.json         # .NET SDK versionstyring
-```
-
-### Mappeansvar
-- **src/Core/**: Indeholder kerne forretningslogik, applikationstjenester og interfaces. Ingen afhængigheder til andre lag.
-- **src/Domain/**: Indeholder domæneentiteter, value objects og domænelogik. Rene forretningsregler.
-- **src/Infrastructure/**: Implementerer interfaces fra Core, håndterer dataadgang (f.eks. MySQL) og eksterne integrationer.
-- **src/WebUI/**: Blazor frontend-projekt til brugergrænseflade og klientlogik.
-- **tests/**: Indeholder testprojekter for hvert hovedlag, følger samme struktur som `src/`.
-- **docs/**: Markdown-dokumentation for arkitektur, use cases og analyse.
-- **LocalNuget/**: Lokal NuGet-pakkelager.
-- **.github/**: CI/CD workflows og Copilot-instruktioner.
-
-For more details, see the documentation in `docs/` and `.github/copilot-instructions.md`.
-
----
-
 ## Opsætningsvejledning
 
 ### Krav
 - .NET 8 SDK
-- Docker (valgfrit, anbefales til database)
-- SQL Server eller MySQL
+- Docker
 
 ### Klon Repository
 ```sh
@@ -142,68 +107,125 @@ MYSQL_ROOT_PASSWORD=your_root_password
 MYSQL_DATABASE=your_database_name
 MYSQL_USER=your_username
 MYSQL_PASSWORD=your_user_password
+MYSQL_HOST=localhost
 ```
 Ændre værdierne til dine ønskede databaseindstillinger.
 
-#### Start MySQL-containeren:
+#### Kør SQL-server:
+```sh
+docker-compose up slottets-sqlserver
+```
+
+#### Fjern containeren:
+```sh
+docker-compose down slottets-sqlserver
+```
+
+### Kør applikationen
 ```sh
 docker-compose up
 ```
+
 Alternativt direkte med Docker:
 ```sh
 docker run --name slottets-sqlserver -e MYSQL_ROOT_PASSWORD=your_root_password -e MYSQL_DATABASE=your_database_name -e MYSQL_USER=your_username -e MYSQL_PASSWORD=your_user_password -p 3307:3306 -d mysql
 ```
 
-### Byg og kør applikationen
-Byg løsningen:
-```sh
-dotnet build Slottet.CareManagement.slnx
-```
-Kør tests:
-```sh
-dotnet test Slottet.CareManagement.slnx
-```
-Start applikationen:
-```sh
-dotnet run --project src/WebUI/WebUI/WebUI.csproj
-```
-
-### Windows sandbox
-For at oprette et isoleret testmiljø på Windows kan du aktivere Windows Sandbox (version 2) med:
-```powershell
-Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -All
-```
-Kør PowerShell som administrator og genstart computeren hvis nødvendigt.
-
+---
 
 ## For developers
+To ensure consistency and quality in the code, follow these guidelines:
+
+### Folder Structure & Responsibilities
+
+The solution follows Clean Architecture principles and is organized as follows:
+
+```
+├── src/                          # All production code
+│   ├── Core/                     # Core business logic (use cases, interfaces)
+│   │   ├── DTOs                  # Data Transfer Objects for use cases
+│   │   ├── Handlers              # Use case handlers implementing business logic
+│   │   ├── Helpers               # Utility classes and functions
+│   │   ├── Interfaces            # Interfaces for services and repositories
+│   │   ├── Managers              # Service classes that implement interfaces and contain business logic
+│   │   ├── Mappers               # Mapping logic between domain models and DTOs
+│   │   └── Services              # Application services that orchestrate use cases
+│   ├── Domain/                   # Domain models and business entities
+│   │   ├── Attributes/           # Custom attributes for domain models
+│   │   ├── Entities/             # Core domain entities
+│   │   ├── Enums/                # Enumerations used in the domain
+│   │   └── Interfaces/           # Domain interfaces
+│   ├── Infrastructure/           # Infrastructure (data access, external services)
+│   │   ├── Persistents           # Database context and repositories
+│   │   │   └── Configurations    # Database configurations and migrations
+│   │   └── Repositories          # Repository implementations for data access
+│   └── WebUI/                    # Blazor frontend (UI and client logic)
+├── tests/                        # All test projects, mirrors src/ structure
+├── docs/                         # Documentation (architecture, use cases, analysis)
+├── LocalNuget/                   # Local NuGet packages
+├── .github/                      # GitHub workflows and Copilot instructions
+├── docker-compose.yml            # Docker Compose configuration
+├── Directory.Build.props/targets # Solution-wide MSBuild settings
+├── Slottet.CareManagement.slnx   # Solution file
+└── global.json                   # .NET SDK version management
+```
+
+### Folder Responsibilities
+- **src/Core/**: Contains core business logic, application services, and interfaces. No dependencies on other layers.
+- **src/Domain/**: Contains domain entities, value objects, and domain logic. Pure business rules.
+- **src/Infrastructure/**: Implements interfaces from Core, handles data access (e.g., MySQL) and external integrations.
+- **src/WebUI/**: Blazor frontend project for user interface and client logic.
+- **tests/**: Contains test projects for each main layer, follows the same structure as `src/`.
+- **docs/**: Markdown documentation for architecture, use cases, and analysis.
+- **LocalNuget/**: Local NuGet package repository.
+- **.github/**: CI/CD workflows and Copilot instructions.
+
+For more details, see the documentation in `docs/` and `.github/copilot-instructions.md`.
+
+
 
 ### Copilot Agent Instructions
-Visual Studio Code's Copilot Agent kan hjælpe med at automatisere opgaver og generere kode baseret på dine instruktioner. 
-BC skal være placeret i docs/bc.md for at Copilot Agent kan bruge det som reference til at generere relevante i relavant sprog og kontekst.
-For at få mest muligt ud af Copilot Agent, følg disse retningslinjer:
+Visual Studio Coplit Agent can help automate tasks and generate code based on your instructions.
+BC should be placed in docs/bc.md for Copilot Agent to use it as a reference to generate relevant code in the relevant language and context.
+To get the most out of Copilot Agent, follow these guidelines:
 
----
+#### Create Use Cases (Coming soon)
+```plaintext
+#uc-artifact.agent.md
+Create use case for "Vagtvalg og Borgeroversigt"
+```
 
-#### Domain Model (DM) Automation
-Sørg for at have en klar og detaljeret usecase beskrivelse, da Copilot Agent vil bruge denne information til at generere et relevant og præcist domænemodeldiagram.
+#### Create Domain Models
 
-Skriv føllgende instruktion for at generere DM:
 ```plaintext
 #dm-artifact.agent.md
-Create DM for usecase uc-xxx
+Update dm for usecase 003
 ```
-Tilpas attributter og relationer i DM baseret på usecase-beskrivelsen for at sikre, at det afspejler de nødvendige forretningsregler og entiteter korrekt.
 
----
-
-#### System Sequence Diagram (SSD) Automation
-Sørg for at have en klar og detaljeret usecase beskrivelse, da Copilot Agent vil bruge denne information til at generere et relevant og præcist systemsekvensdiagram.
-
-Skriv følgende instruktion for at generere SSD:
+#### Create SSD
 ```plaintext
 #ssd-artifact.agent.md
-Create SSD for usecase uc-xxx
+Create ssd for use case 003
 ```
 
-Tilpas aktører, beskeder og systemkomponenter i SSD baseret på usecase-beskrivelsen for at sikre, at det afspejler de nødvendige interaktioner og systemadfærd korrekt.
+#### Create OC
+```plaintext
+#oc-artifact.agent.md
+Create oc for use case 003
+```
+
+#### Create SD
+```plaintext
+#sd-artifact.agent.md
+Create sd for use case 003
+We are using webapi for data access
+```
+
+#### Create DCD / Code (Coming soon)
+```plaintext
+#dcd-artifact.agent.md
+Create dcd for use case 003
+```
+
+##### Note
+- Trigger words are create / update `[dm,sd,oc,ssd,dcd,uc]` for "Use Case Name"

@@ -13,11 +13,11 @@ public class ResidentNote : IEntity
     [Key]
     public Guid Id { get; set; }
     [Required]
-    public string Content { get; set; } = string.Empty;
+    public string Note { get; set; } = string.Empty;
+
     [Required]
-    public DateTime CreatedAt { get; set; }
-    public DateTime? EditedAt { get; set; }
+    public DateTime EditedAt { get; set; }
+
     [ForeignKey("Resident")]
     public Guid ResidentId { get; set; }
-    public Resident? Resident { get; set; }
 }

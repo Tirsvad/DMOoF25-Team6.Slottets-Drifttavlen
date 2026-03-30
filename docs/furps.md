@@ -23,16 +23,22 @@ The acronym stands for Functionality, Usability, Reliability, Performance, and S
 
 ### Functionality
 - Digitalt overlapsskema med borgerfelter, trafiklysmodel, medicinstatus, opgaver og beskeder.
-- Brugerroller: plejepersonale, vagtansvarlige, admin.
-- Adgangskontrol og login.
-- Historik og sporbarhed for alle overlaps.
+- Understøttelse af både Skoven og Slottet afdelinger med mulighed for separat og samlet visning.
+- Brugerroller: plejepersonale, vagtansvarlige, ledere/koordinatorer, admin.
+- Differentierede brugerrettigheder (almindelige medarbejdere vs. ledere/koordinatorer).
+- Adgangskontrol og login (hurtigt login, minimumskrav til kodeord, initialer/e-mail som brugernavn).
+- Historik og sporbarhed for alle overlaps og ændringer (audit trail: hvem har skrevet/redigeret hvad og hvornår).
+- Markering af sene/tilbagevirkende indtastninger med korrekt tidsstempel.
+- Hurtig og nem markering af medicin og risikovurdering (trafiklys-system).
 - Integration med FMK og notifikationssystem (udvidelse).
 
 ### Usability
-- Intuitiv brugergrænseflade tilpasset travle vagtskifter.
+- Intuitiv brugergrænseflade tilpasset travle vagtskifter og alle medarbejdertyper (inkl. vikarer og nyansatte).
 - Klart visuelt overblik over borgerstatus og opgaver.
-- Responsivt design til tablets og PC.
+- Responsivt design til tablets, PC og arbejdstelefoner (mobile enheder).
 - Hurtig navigation og let aflæsning af kritisk information.
+- Hurtig og nem login-proces.
+- Mulighed for løbende og efterfølgende dokumentation, med tydelig markering af sene indtastninger.
 
 ### Reliability
 - Høj tilgængelighed og failover (cloud-ready, lokal og netværksdrift).

@@ -14,6 +14,12 @@
 | KPI-R-008  | Business requirement      | Systemet skal overholde GDPR og datasikkerhed.                                                    |
 | KPI-R-009  | Business requirement      | Systemet skal holdes inden for projektbudget.                                                     |
 | KPI-R-010  | Non-functional requirement| CRUD-operationer skal udføres inden for acceptabel tid (< 1 sekund).                              |
+| KPI-R-011  | Functional requirement    | Systemet skal understøtte både Skoven og Slottet afdelinger med mulighed for separat og samlet visning. |
+| KPI-R-012  | Non-functional requirement| Systemet skal have hurtig og nem login-proces (login < 5 sekunder for 95% af brugere).             |
+| KPI-R-013  | Functional requirement    | Systemet skal understøtte differentierede brugerrettigheder (almindelige medarbejdere vs. ledere/koordinatorer). |
+| KPI-R-014  | Non-functional requirement| Systemet skal have audit trail, der viser hvem der har skrevet/redigeret hvad og hvornår.          |
+| KPI-R-015  | Functional requirement    | Systemet skal kunne markere sene/tilbagevirkende indtastninger med korrekt tidsstempel.            |
+| KPI-R-016  | Non-functional requirement| Systemet skal kunne anvendes på arbejdstelefoner og mobile enheder.                               |
 
 ## Functional KPI measurements
 
@@ -32,6 +38,10 @@
 | KPI-K-006  | Samtidige brugere           | Stress test                              | 20 brugere         | Annual            |
 | KPI-K-007  | Sporbarhed                  | Audit-log for alle ændringer             | 100%               | Monthly           |
 | KPI-K-008  | CRUD-operationer            | Gennemsnitstid for CRUD                  | < 1 sekund         | Monthly           |
+| KPI-K-012  | Login-hastighed              | Måling af login-tid for brugere          | 95% < 5 sekunder   | Quarterly         |
+| KPI-K-013  | Mobilunderstøttelse          | Brugerundersøgelse og test               | 100%               | Annual            |
+| KPI-K-014  | Rollebaseret adgang          | Test af adgangsrettigheder               | 100% korrekt       | Annual            |
+| KPI-K-015  | Markering af sene indtastninger | Stikprøvekontrol                        | 100% korrekt       | Quarterly         |
 
 ## Business KPI measurements
 
