@@ -2,7 +2,7 @@
 Description: 'Domain Model (DM) template for project documentation.'
 applyTo: 'docs/dm.md' and 'docs/use-cases/**/uc-*.dm.md'
 references:
-  - docs/quality-criteria/qc-dm.md
+  - docs/quality-criteria/ood/hld/qc-dm.md
 ---
 
 # DM Instructions (Summary)
@@ -11,9 +11,9 @@ references:
 - Store DM files in `docs/use-cases/uc-<Insert Use Case Identifier>*/` as `uc-<Insert Use Case Identifier>.dm.md` or in `docs/` as `dm.md` for solution domain models.
 - Increment version numbers for significant changes; keep only the latest version in main, archive older versions
 - Include metadata, version log (with date, author), and use Mermaid diagram.
-- Create files in English; if product owner domain language differs, create a separate file with language
+- Create files in English; if product owner domain language differs, create a separate file with language code suffix (e.g., `uc-<Use Case Identifier>.dm.da.md`) and include a translation section in the English file.
 
-## DM Template (Minimal):
+## Template (Minimal):
 ```markdown
 # Domain Model (DM) for [Insert Project Name]
 ## Metadata
@@ -60,7 +60,7 @@ optional sections for product owner domain language:
 | [Original Term 2]      | [Translation 2]            |
 ```
 
-## DM example (Medicine Status for a Resident):
+## Example (Medicine Status for a Resident):
 ```markdown
 # Domain Model (DM) for Slottets Drifttavlen
 ## Metadata
