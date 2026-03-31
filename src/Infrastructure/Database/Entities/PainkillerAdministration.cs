@@ -17,7 +17,7 @@ namespace Infrastructure.Database.Entities;
 /// and the time when the next dose is allowed.
 /// </summary>
 
-public class PainkillerAdministrationEntity
+public class PainkillerAdministration
 {
     // Primary key for the painkiller administration record
     [Key]
@@ -30,7 +30,7 @@ public class PainkillerAdministrationEntity
    
     // Navigation property to the related resident.
     [ForeignKey(nameof(ResidentId))]
-    public virtual ResidentEntity Resident { get; set; } = null!;
+    public virtual Resident Resident { get; set; } = null!;
 
     
     // What type of painkiller administered

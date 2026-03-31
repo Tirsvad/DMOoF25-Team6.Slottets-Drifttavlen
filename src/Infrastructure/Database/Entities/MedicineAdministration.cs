@@ -18,7 +18,7 @@ namespace Infrastructure.Database.Entities;
 /// to a resident at a specific time.
 /// </summary>
 
-public class MedicineAdministrationEntity
+public class MedicineAdministration
 {
     // Primary key medicine administration record
     [Key]
@@ -32,7 +32,7 @@ public class MedicineAdministrationEntity
 
     // Navigation property to the related resident entity
     [ForeignKey(nameof(ResidentId))]
-    public virtual ResidentEntity Resident { get; set; } = null!;
+    public virtual Resident Resident { get; set; } = null!;
 
   
     // Name of the medicine administered.

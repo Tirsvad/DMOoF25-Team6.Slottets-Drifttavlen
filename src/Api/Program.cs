@@ -20,9 +20,11 @@ public class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
         //  Adds DbContext
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
         //Adds repository and handler
         builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();

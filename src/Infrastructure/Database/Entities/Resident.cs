@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Database.Entities;
 
-public class ResidentEntity
+public class Resident
 {
     [Key]
     public Guid Id { get; set; }
@@ -30,9 +30,9 @@ public class ResidentEntity
     /// One resident can have many medicine records.
     /// </summary>
 
-    public virtual ICollection<MedicineAdministrationEntity> Medicines { get; set; } = new List<MedicineAdministrationEntity>();
+    public virtual ICollection<MedicineAdministration> Medicines { get; set; } = new List<MedicineAdministration>();
 
-    public virtual ICollection<PainkillerAdministrationEntity> Painkillers { get; set; } = new List<PainkillerAdministrationEntity>();
+    public virtual ICollection<PainkillerAdministration> Painkillers { get; set; } = new List<PainkillerAdministration>();
 
 
 }
