@@ -3,7 +3,7 @@
 
 using Domain.Interfaces;
 
-using Infrastructure.Persistents;
+using Infrastructure.Persistent;
 using Infrastructure.Repositories;
 
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,11 @@ public class RepositoryTests
         DbContextOptions<AppDbContext> options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
-        _repository = new UserRepository(new AppDbContext(options));
+        _repository = new UserRepository(new AppDbContext(options)
+        {
+            Residents = null!,
+            ResidentNotes = null!
+        });
     }
 
     [Theory]
