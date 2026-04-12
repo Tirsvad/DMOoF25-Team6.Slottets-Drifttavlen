@@ -20,9 +20,9 @@ using Domain.Entities;
 /// </remarks>
 namespace Core.Services;
 
-public class ResidentService(IResidentRepository residentRepository, IResidentManager residentManager) : IResidentService
+public class ResidentService(IResidentManager residentManager) : IResidentService
 {
-    private readonly IResidentRepository _residentRepository = residentRepository;
+    //private readonly IResidentRepository _residentRepository = residentRepository;
     private readonly IResidentManager _residentManager = residentManager;
 
     /// <summary>
@@ -71,7 +71,8 @@ public class ResidentService(IResidentRepository residentRepository, IResidentMa
     /// </returns>
     public Task<Resident> AddAsync(Resident resident, CancellationToken cancellationToken = default)
     {
-        return _residentRepository.AddAsync(resident, cancellationToken);
+        // return _residentRepository.AddAsync(resident, cancellationToken);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -82,7 +83,8 @@ public class ResidentService(IResidentRepository residentRepository, IResidentMa
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task UpdateAsync(Resident resident, CancellationToken cancellationToken = default)
     {
-        return _residentRepository.UpdateAsync(resident, cancellationToken);
+        //return _residentRepository.UpdateAsync(resident, cancellationToken);
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -93,7 +95,8 @@ public class ResidentService(IResidentRepository residentRepository, IResidentMa
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public Task DeleteAsync(Resident resident, CancellationToken cancellationToken = default)
     {
-        return _residentRepository.DeleteAsync(resident, cancellationToken);
+        //return _residentRepository.DeleteAsync(resident, cancellationToken);
+        throw new NotImplementedException();
     }
 
     public Task<IEnumerable<Resident>> AddRangeAsync(IEnumerable<Resident> entities, CancellationToken cancellationToken = default)

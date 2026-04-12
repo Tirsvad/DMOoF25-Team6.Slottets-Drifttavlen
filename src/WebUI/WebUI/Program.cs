@@ -1,7 +1,13 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
+using Core;
+using Core.Interfaces.Managers;
+using Core.Interfaces.Services;
+using Core.Services;
+
 using Infrastructure;
+using Infrastructure.Services;
 
 using Microsoft.AspNetCore.DataProtection;
 
@@ -30,7 +36,10 @@ public class Program
             .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
 
+        _ = builder.Services.AddCore();
         _ = builder.Services.AddInfrastructure();
+
+        
 
         // Persist Data Protection keys to a directory for antiforgery token decryption across restarts/containers
         _ = builder.Services.AddDataProtection()

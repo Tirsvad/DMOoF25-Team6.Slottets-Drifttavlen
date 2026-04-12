@@ -5,6 +5,7 @@
 @using Domain.Enums
 @using Domain.Entities
 @using WebUI.Components.Residents
+@inject Core.Interfaces.Services.IResidentService ResidentService
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -17,7 +18,7 @@
           
             <div class="col">
                     @* Korrekt *@
-                    <ResidentCard Initials="@resident.Initials" TrafficLight="@(resident.TrafficLightStatus ?? TrafficLightStatus.Green)" LastUpdated="Just now" />
+                    <ResidentCard Resident="resident" />
                 </div>
 
                }
@@ -31,12 +32,12 @@
 
 @code 
 {
-    private List<Resident> _residents =
-    [
-       new() { Id = Guid.NewGuid(), Initials = "AB", TrafficLightStatus = TrafficLightStatus.Green },
-       new() { Id = Guid.NewGuid(), Initials = "TS", TrafficLightStatus = TrafficLightStatus.Yellow },
-       new() { Id = Guid.NewGuid(), Initials = "MK", TrafficLightStatus = TrafficLightStatus.Red },
-    ];
+    private List<Resident> _residents = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _residents = (await ResidentService.GetAllAsync()).ToList();
+    }
    
     //TODO: Replace with real timestamp in LastUpdated and update it when traffic light changes
 
