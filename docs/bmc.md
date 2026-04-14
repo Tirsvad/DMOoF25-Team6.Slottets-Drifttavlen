@@ -6,10 +6,6 @@
 | Id                | QC-BMC                            |
 | crossReference    |                                   |
 
-## Version
-- **Version**: 0001
-- **Date**: 2026-02-07
-
 ## Version Log
 | Version | Date       | Description              | Author     |
 |---------|------------|--------------------------|------------|

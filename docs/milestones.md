@@ -6,10 +6,6 @@
 | Id                | Milestone                         |
 | crossReference    |                                   |
 
-## Version
-- **Version**: 0001
-- **Date**: 2026-02-07
-
 ### Change Log
 | Date       | Version | Description                     | Author        |
 |------------|---------|---------------------------------|---------------|
