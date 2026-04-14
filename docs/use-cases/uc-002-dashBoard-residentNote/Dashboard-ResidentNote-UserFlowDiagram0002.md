@@ -1,3 +1,5 @@
+# User Flow Diagram for Resident Notes in Dashboard
+
 ## Metadata
 | Key               | Value                             |
 |-------------------|-----------------------------------|

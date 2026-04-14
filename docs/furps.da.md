@@ -1,4 +1,4 @@
-# FURPS+
+# FURPS+ (Dansk)
 FURPS+ er en model til klassificering af softwarekvalitetsattributter.
 Forkortelsen står for Funktionalitet, Usability, Reliability, Performance og Supportability, hvor "+" angiver yderligere hensyn såsom designbegrænsninger, implementeringskrav, interfacekrav og fysiske krav.
 
