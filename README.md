@@ -1,3 +1,9 @@
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Repo Size][repo-size-shield]][repo-size-url]
+[![Issues][issues-shield]][issues-url]
+
 # Slottets Drifttavlen
 
 ## Indholdsfortegnelse
@@ -245,3 +251,15 @@ Create dcd for use case 003
 
 ##### Note
 - Trigger words are create / update `[dm,sd,oc,ssd,dcd,uc]` for "Use Case Name"
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[contributors-shield]: https://img.shields.io/github/contributors/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[contributors-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[forks-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/network/members
+[stars-shield]: https://img.shields.io/github/stars/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[stars-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/stargazers
+[repo-size-shield]: https://img.shields.io/github/repo-size/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[repo-size-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen
+[issues-shield]: https://img.shields.io/github/issues/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[issues-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/issues
