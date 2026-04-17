@@ -4,6 +4,8 @@
 
 using Core.Interfaces.Managers;
 using Core.Interfaces.Services;
+
+using Infrastructure.Managers;
 using Infrastructure.Services;
 
 using Microsoft.Extensions.DependencyInjection;

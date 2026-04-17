@@ -1,0 +1,29 @@
+@page "/login"
+@rendermode InteractiveAuto
+@using Microsoft.AspNetCore.Components.Authorization
+<AuthorizeView>
+    <Authorized>
+        <p>Du er logget ind.</p>
+        <button @onclick="Logout">Log ud</button>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Log ind</h3>
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin" Context="editFormContext">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div>
+                <label>Brugernavn:</label>
+                <InputText @bind-Value="loginModel.Username" />
+            </div>
+            <div>
+                <label>Adgangskode:</label>
+                <InputText @bind-Value="loginModel.Password" type="password" />
+            </div>
+            <button type="submit">Log ind</button>
+        </EditForm>
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="text-danger">@errorMessage</div>
+        }
+    </NotAuthorized>
+</AuthorizeView>
