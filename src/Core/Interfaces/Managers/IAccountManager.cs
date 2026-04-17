@@ -15,7 +15,7 @@ public interface IAccountManager
     /// </summary>
     /// <param name="registrationRequestDto">An object containing the registration details.</param>
     /// <returns>A response object containing the result of the registration operation.</returns>
-    Task<RegistrationResponseDto> CreateAccountAsync(RegistrationRequestDto registrationRequestDto);
+    Task<RegistrationResponseDto> Register(RegistrationRequestDto registrationRequestDto);
 
     /// <summary>
     /// Authenticates a user and returns login information, including tokens if successful.

@@ -13,7 +13,7 @@ public class AccountService(IAccountManager accountManager) : IAccountService
 
     public Task<RegistrationResponseDto> CreateAccountAsync(RegistrationRequestDto registrationRequestDto)
     {
-        return _accountManager.CreateAccountAsync(registrationRequestDto);
+        return _accountManager.Register(registrationRequestDto);
     }
 
     public Task<LoginResponseDto> LoginAsync(LoginRequestDto loginRequestDto)

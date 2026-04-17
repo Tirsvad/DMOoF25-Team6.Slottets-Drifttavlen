@@ -32,7 +32,7 @@ public class AccountServiceTests
         };
         RegistrationResponseDto expectedResponse = new();
         _ = _accountManagerMock
-            .Setup(m => m.CreateAccountAsync(request))
+            .Setup(m => m.Register(request))
             .ReturnsAsync(expectedResponse);
 
         // Act
@@ -40,7 +40,7 @@ public class AccountServiceTests
 
         // Assert
         Assert.Equal(expectedResponse, result);
-        _accountManagerMock.Verify(m => m.CreateAccountAsync(request), Times.Once);
+        _accountManagerMock.Verify(m => m.Register(request), Times.Once);
     }
 
     [Fact]

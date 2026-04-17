@@ -1,7 +1,0 @@
-{
-    "dotnet.defaultSolution": "Slottet.CareManagement.slnx",
-    "terminal.integrated.defaultProfile.osx": "zsh",
-    "workbench.panel.defaultLocation": "bottom",
-    "workbench.panel.opensMaximized": "never",
-    "terminal.integrated.splitCwd": "workspaceFolder"
-}

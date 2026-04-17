@@ -7,7 +7,7 @@ using Core.Interfaces.Managers;
 
 using Domain.Entities;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Managers;
 
 /// <summary>
 /// Provides operations for managing residents by communicating with the backend API over HTTP.
