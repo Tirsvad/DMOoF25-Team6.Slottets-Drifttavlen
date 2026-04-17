@@ -1,7 +1,14 @@
 # Slottets Drifttavlen
 
-## Indholdsfortegnelse
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Repo Size][repo-size-shield]][repo-size-url]
+[![Issues][issues-shield]][issues-url]
 
+## 📚 Indholdsfortegnelse
+
+- [Dokumentationsoversigt](#dokumentationsoversigt)
 - [Virksomhedsprofil](#virksomhedsprofil)
 - [Arbejdsgang](#arbejdsgang)
 - [Problemstilling](#problemstilling)
@@ -14,24 +21,24 @@
 - [Folder Structure & Responsibilities](#folder-structure--responsibilities)
 - [Opsætningsvejledning](#opsætningsvejledning)
 
+<a name="dokumentationsoversigt"></a>
 ## Dokumentationsoversigt
 
-- [FURPS+](docs/furps.0001.md)
-- [KPI](docs/kpi.0001.md)
-- [Milepæle og leverancer](docs/milestones.0001.md)
-- [Risikoanalyse](docs/risk-analysis.0001.md)
+- [Business Case](docs/bc.md)
+- [FURPS+](docs/furps.md)
+- [KPI](docs/kpi.md)
+- [Domænemodel](docs/dm.da.md)
+- [Milepæle og leverancer](docs/milestones.md)
+- [Risikoanalyse](docs/risk-analysis.md)
+- [Milepæleplan / Leverancer](docs/milestones.md)
 
-### Quality Criteria
-- [BMC kvalitetskriterier](docs/quality-criteria/artifact/qc-bmc.0001.md)
-- [BPMN kvalitetskriterier](docs/quality-criteria/artifact/qc-bpmn.0001.md)
-- [C# kodekvalitet](docs/quality-criteria/qc-csharp-code.0001.md)
-- [SQL kvalitetskriterier](docs/quality-criteria/qc-sql.0001.md)
-
+<a name="virksomhedsprofil"></a>
 ## Virksomhedsprofil
 Slottet er et døgnbemandet bosted, der yder omsorg og pleje til borgere med særlige behov.
 Personalet arbejder i dag-, aften- og nattevagter og sikrer kontinuerlig støtte og pleje.
 Teamet samarbejder dagligt om at levere høj kvalitet og sikre borgernes trivsel og sikkerhed.
 
+<a name="arbejdsgang"></a>
 ## Arbejdsgang
 Ved vagtskifte udveksler afgående og tilgående vagthold kritisk information om borgernes tilstand, medicinhåndtering og opgaver. Overlapsskemaet indeholder:
 - Borgerens aktuelle tilstand (trafiklysmodel)
@@ -40,10 +47,12 @@ Ved vagtskifte udveksler afgående og tilgående vagthold kritisk information om
 - Opgaver og beskeder til næste vagthold
 - Særlige hændelser
 
+<a name="problemstilling"></a>
 ## Problemstilling
 Slottet anvender i dag et papirbaseret overlapsskema, hvilket medfører risiko for fejl, manglende historik og tidskrævende håndtering.
 Projektet har til formål at udvikle et digitalt IT-system, der erstatter det papirbaserede skema og understøtter personalets daglige arbejde mere effektivt og sikkert.
 
+<a name="systemdesign-og-funktionalitet"></a>
 ## Systemdesign og Funktionalitet
 - **Vagtvalg:** Personalet vælger vagttype ved login.
 - **Borgeroversigt:** Individuelle felter for hver borger med trafiklysmodel, medicinstatus, personale, opgaver og hændelser.
@@ -52,6 +61,7 @@ Projektet har til formål at udvikle et digitalt IT-system, der erstatter det pa
 - **UI/UX:** Intuitivt, responsivt design med klart visuelt overblik.
 - **Datasikkerhed:** Adgangslogning, GDPR-compliance, historik for sporbarhed.
 
+<a name="teknologi-og-arkitektur"></a>
 ## Teknologi og Arkitektur
 - **Backend:** ASP.NET Core
 - **Frontend:** Blazor
@@ -61,11 +71,13 @@ Projektet har til formål at udvikle et digitalt IT-system, der erstatter det pa
 - **Cloud-ready:** Kan køre standalone, client/server eller cloud-baseret (Azure, AWS)
 - **Skalering:** Horisontal skalering, central konfiguration, load balancing
 
+<a name="udvidelsesmuligheder"></a>
 ## Udvidelsesmuligheder
 - Integration med FMK (Fælles Medicinkort)
 - Notifikationer og påmindelser
 - Rapportering af historik og hændelser
 
+<a name="diagrammer--dokumentation"></a>
 ## Diagrammer & Dokumentation
 Se `docs/` for:
 - Klassediagram
@@ -75,12 +87,14 @@ Se `docs/` for:
 - Aktivitetsdiagram
 - Sikkerhedsovervejelser
 
+<a name="sikkerhedsovervejelser"></a>
 ## Sikkerhedsovervejelser
 - Kryptering af følsomme data
 - GDPR og håndtering af personoplysninger
 - Adgangskontrol og autentificering
 - Logning af brugeraktivitet
 
+<a name="forbedringsforslag"></a>
 ## Forbedringsforslag
 - Automatisk integration med FMK
 - Notifikationer for opgaver og medicin
@@ -88,6 +102,7 @@ Se `docs/` for:
 
 ---
 
+<a name="opsætningsvejledning"></a>
 ## Opsætningsvejledning
 
 ### Krav
@@ -151,6 +166,7 @@ dotnet ef database update --project src/Infrastructure.Data --startup-project sr
 
 ---
 
+<a name="for-udviklere"></a>
 ## For developers
 To ensure consistency and quality in the code, follow these guidelines:
 
@@ -245,3 +261,18 @@ Create dcd for use case 003
 
 ##### Note
 - Trigger words are create / update `[dm,sd,oc,ssd,dcd,uc]` for "Use Case Name"
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[contributors-shield]: https://img.shields.io/github/contributors/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[contributors-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[forks-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/network/members
+[stars-shield]: https://img.shields.io/github/stars/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[stars-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/stargazers
+[repo-size-shield]: https://img.shields.io/github/repo-size/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[repo-size-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen
+[issues-shield]: https://img.shields.io/github/issues/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[issues-url]: https://github.com/DMOoF25-Team6/Slottets-Drifttavlen/issues
+
+[Coverage-shield]: https://img.shields.io/codecov/c/github/DMOoF25-Team6/Slottets-Drifttavlen.svg?style=for-the-badge
+[Coverage-url]: https://codecov.io/gh/DMOoF25-Team6/Slottets-Drifttavlen
