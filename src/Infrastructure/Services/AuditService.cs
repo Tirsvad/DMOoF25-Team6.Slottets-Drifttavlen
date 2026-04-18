@@ -40,5 +40,6 @@ internal class AuditService : IAuditService
 
         //_dbContext.AuditLogs.Add(log);
         //await _dbContext.SaveChangesAsync();
+        await Task.CompletedTask; // Placeholder for async operation
     }
 }
