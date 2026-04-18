@@ -1,15 +1,22 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
+using Core.DTOs.Account;
+using Core.Services;
+
+using Microsoft.AspNetCore.Components.Authorization;
+
+using WebUI.Client.Services;
+
 namespace WebUI.Client;
 
 /// <summary>
 /// Service for handling authentication logic, including login and logout.
 /// </summary>
 public class AuthService(
-    //TokenStorageService tokenStorageService,
-    //AuthenticationStateProvider authenticationStateProvider,
-    //AccountService accountService
+    TokenStorageService tokenStorageService,
+    AuthenticationStateProvider authenticationStateProvider,
+    AccountService accountService
     )
 {
 
@@ -18,14 +25,14 @@ public class AuthService(
     /// </summary>
     public async Task<bool> LoginAsync(string username, string password)
     {
-        //LoginRequestDto userLogin = new() { EmailAddress = username, Password = password };
-        //LoginResponseDto result = await accountService.LoginAsync(userLogin);
-        //if (result.JwtToken is not null)
-        //{
-        //    await tokenStorageService.SetTokenAsync(result.JwtToken);
-        //    (authenticationStateProvider as JwtAuthenticationStateProvider)?.NotifyAuthenticationStateChanged();
-        //    return true;
-        //}
+        LoginRequestDto userLogin = new() { EmailAddress = username, Password = password };
+        LoginResponseDto result = await accountService.LoginAsync(userLogin);
+        if (result.JwtToken is not null)
+        {
+            await tokenStorageService.SetTokenAsync(result.JwtToken);
+            (authenticationStateProvider as JwtAuthenticationStateProvider)?.NotifyAuthenticationStateChanged();
+            return true;
+        }
         return false;
     }
 
@@ -34,7 +41,7 @@ public class AuthService(
     /// </summary>
     public async Task LogoutAsync()
     {
-        //await tokenStorageService.RemoveTokenAsync();
-        //(authenticationStateProvider as JwtAuthenticationStateProvider)?.NotifyAuthenticationStateChanged();
+        await tokenStorageService.RemoveTokenAsync();
+        (authenticationStateProvider as JwtAuthenticationStateProvider)?.NotifyAuthenticationStateChanged();
     }
 }

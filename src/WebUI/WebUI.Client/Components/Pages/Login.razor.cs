@@ -4,6 +4,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace WebUI.Client.Components.Pages;
 
@@ -15,11 +16,15 @@ public partial class Login
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
 
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+
     private readonly LoginModel loginModel = new();
     private string? errorMessage;
 
     private async Task HandleLogin()
     {
+        errorMessage = "Ugyldigt brugernavn eller adgangskode.";
         bool success = await AuthService.LoginAsync(loginModel.Username, loginModel.Password);
         if (!success)
         {
@@ -40,9 +45,9 @@ public partial class Login
 
     public class LoginModel
     {
-        [Required]
+        [Required(ErrorMessage = "Brugernavn er påkrævet.")]
         public string Username { get; set; } = string.Empty;
-        [Required]
+        [Required(ErrorMessage = "Adgangskode er påkrævet.")]
         public string Password { get; set; } = string.Empty;
     }
 }
