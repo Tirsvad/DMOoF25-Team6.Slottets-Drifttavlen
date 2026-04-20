@@ -3,7 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.DTOs.Account;
+namespace Core.DTOs.Identity;
 
 /// <summary>
 /// Represents a request to log in to the system.
@@ -20,7 +20,7 @@ public class LoginRequestDto
     /// A string containing the user's email address.
     /// </value>
     [EmailAddress(ErrorMessage = "Invalid email address.")]
-    public required string EmailAddress { get; set; }
+    public required string Email { get; set; }
 
     /// <summary>
     /// Gets or sets the password of the user.

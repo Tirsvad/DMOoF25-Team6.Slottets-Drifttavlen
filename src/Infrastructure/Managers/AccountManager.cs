@@ -3,7 +3,7 @@
 
 using System.Net.Http.Json;
 
-using Core.DTOs.Account;
+using Core.DTOs.Identity;
 using Core.Interfaces.Managers;
 
 namespace Infrastructure.Managers;
@@ -26,7 +26,7 @@ public class AccountManager(HttpClient httpClient) : IAccountManager
     /// <remarks>
     /// Returns a failed response if the backend response cannot be parsed.
     /// </remarks>
-    public async Task<RegistrationResponseDto> Register(RegistrationRequestDto registrationRequestDto)
+    public async Task<RegistrationResponseDto> Register(RegisterRequestDto registrationRequestDto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/accounts/register", registrationRequestDto);
         try
@@ -143,7 +143,7 @@ public class AccountManager(HttpClient httpClient) : IAccountManager
         };
     }
 
-    public Task<RegistrationResponseDto> CreateAccountAsync(RegistrationRequestDto registrationRequestDto)
+    public Task<RegistrationResponseDto> CreateAccountAsync(RegisterRequestDto registrationRequestDto)
     {
         throw new NotImplementedException();
     }

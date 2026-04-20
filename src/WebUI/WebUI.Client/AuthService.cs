@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
-using Core.DTOs.Account;
+using Core.DTOs.Identity;
 using Core.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
@@ -25,7 +25,7 @@ public class AuthService(
     /// </summary>
     public async Task<bool> LoginAsync(string username, string password)
     {
-        LoginRequestDto userLogin = new() { EmailAddress = username, Password = password };
+        LoginRequestDto userLogin = new() { Email = username, Password = password };
         LoginResponseDto result = await accountService.LoginAsync(userLogin);
         if (result.JwtToken is not null)
         {

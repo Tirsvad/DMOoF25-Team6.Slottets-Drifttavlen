@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
-using Core.DTOs.Account;
+using Core.DTOs.Identity;
 using Core.Interfaces.Managers;
 using Core.Interfaces.Services;
 
@@ -22,7 +22,7 @@ public class AccountService(IAccountManager accountManager) : IAccountService
     /// </summary>
     /// <param name="registrationRequestDto">A registration request DTO containing user details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="RegistrationResponseDto"/>.</returns>
-    public Task<RegistrationResponseDto> CreateAccountAsync(RegistrationRequestDto registrationRequestDto)
+    public Task<RegistrationResponseDto> CreateAccountAsync(RegisterRequestDto registrationRequestDto)
     {
         return _accountManager.CreateAccountAsync(registrationRequestDto);
     }
