@@ -4,7 +4,7 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace Core.DTOs.Account;
+namespace Core.DTOs.Identity;
 
 
 /// <summary>
@@ -13,7 +13,7 @@ namespace Core.DTOs.Account;
 /// <remarks>
 /// Contains the email address, password, and confirmation password for registration. Validation attributes ensure the data meets requirements.
 /// </remarks>
-public class RegistrationRequestDto
+public class RegisterRequestDto
 {
     /// <summary>
     /// Gets or sets the email address for the new user account.
@@ -23,7 +23,7 @@ public class RegistrationRequestDto
     /// </value>
     [Required(ErrorMessage = Constants.EmailRequired)]
     [EmailAddress(ErrorMessage = Constants.InvalidEmailAddress)]
-    public required string EmailAddress { get; set; }
+    public required string Email { get; set; }
 
     /// <summary>
     /// Gets or sets the password for the new user account.
@@ -35,13 +35,4 @@ public class RegistrationRequestDto
     [MinLength(6, ErrorMessage = Constants.PasswordMinLength)]
     public required string Password { get; set; }
 
-    /// <summary>
-    /// Gets or sets the confirmation password for the new user account.
-    /// </summary>
-    /// <value>
-    /// A confirmation password string that must match the password.
-    /// </value>
-    [Required(ErrorMessage = Constants.ConfirmPasswordRequired)]
-    [Compare("Password", ErrorMessage = Constants.PasswordsDoNotMatch)]
-    public required string ConfirmPassword { get; set; }
 }

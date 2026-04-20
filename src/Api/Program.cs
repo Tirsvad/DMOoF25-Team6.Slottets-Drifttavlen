@@ -4,7 +4,7 @@
 
 // For SwaggerGen extension methods
 
-using Api.Helpers;
+using System.Text;
 
 using Domain.Entities;
 
@@ -14,6 +14,7 @@ using Infrastructure.Data.Persistent;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api;
 
@@ -60,11 +61,32 @@ public class Program
         _ = builder.Services.AddAuthorization();
 
         _ = builder.Services.AddInfrastructureData();
-        //_ = builder.Services.AddInfrastructure();
-        //_ = builder.Services.AddCore();
 
         ConfigureIdentity(builder);
         ConfigureJwtAuthentication(builder);
+        //_ = builder.Services.AddAuthentication(options =>
+        //{
+        //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
+        //})
+        //    .
+        //.AddJwtBearer(options =>
+        //{
+        //    string issuer = builder.Configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer not found in configuration.");
+        //    string audience = builder.Configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience not found in configuration.");
+        //    string key = builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("Jwt:SecretKey not found in configuration.");
+        //    options.TokenValidationParameters = new TokenValidationParameters
+        //    {
+        //        ValidateIssuer = true,
+        //        ValidateAudience = true,
+        //        ValidateLifetime = true,
+        //        ValidateIssuerSigningKey = true,
+        //        ValidIssuer = issuer,
+        //        ValidAudience = audience,
+        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+        //    };
+        //});
 
         // Add services to the container.
         _ = builder.Services.AddControllers();
@@ -95,7 +117,7 @@ public class Program
         _ = app.UseAuthorization();
 
         // Add Identity API endpoints with custom registration authorization
-        _ = app.AddEndpointIdentityApi();
+        //_ = AddEndpointIdentityApi(app);
 
         _ = app.MapControllers();
 
@@ -108,7 +130,8 @@ public class Program
     /// <param name="builder">A web application builder instance.</param>
     private static void ConfigureIdentity(WebApplicationBuilder builder)
     {
-        _ = builder.Services.AddIdentityCore<User>(opt =>
+        // Use IdentityRole<Guid> to match User : IdentityUser<Guid>
+        _ = builder.Services.AddIdentity<User, IdentityRole<Guid>>(opt =>
         {
             opt.Password.RequireDigit = true;
             opt.Password.RequireLowercase = true;
@@ -118,6 +141,14 @@ public class Program
         })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+        // Add cookie authentication for Identity.Application (default) and Identity.External
+        //_ = builder.Services.ConfigureApplicationCookie(options =>
+        //{
+        //    options.LoginPath = "/Account/Login";
+        //    options.AccessDeniedPath = "/Account/AccessDenied";
+        //    // You can further configure options as needed
+        //});
     }
 
     /// <summary>
@@ -126,26 +157,26 @@ public class Program
     /// <param name="builder">A web application builder instance.</param>
     private static void ConfigureJwtAuthentication(WebApplicationBuilder builder)
     {
-        _ = builder.Services.AddAuthentication(opt =>
+        _ = builder.Services.AddAuthentication(options =>
         {
-            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
             .AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                // Use configuration values for JWT validation
+                string issuer = builder.Configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer not found in configuration.");
+                string audience = builder.Configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience not found in configuration.");
+                string key = builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("Jwt:SecretKey not found in configuration.");
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    // IssuerSigningKey should be set here for production use
-
-                    ValidIssuer = builder.Configuration["TokenValidationParameters:ValidIssuer"],
-                    ValidAudience = builder.Configuration["TokenValidationParameters:ValidAudience"],
-                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
-                        System.Text.Encoding.UTF8.GetBytes(builder.Configuration["TokenValidationParameters:IssuerSigningKey"] ?? throw new InvalidOperationException("IssuerSigningKey not found in configuration."))
-                    )
+                    ValidIssuer = issuer,
+                    ValidAudience = audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                 };
             });
     }
@@ -175,7 +206,36 @@ public class Program
         }
         throw new InvalidOperationException("Connection string for AppDbContext not found in environment variables.");
     }
+
+    /// <summary>
+    /// Adds the Identity API endpoints with custom registration authorization.
+    /// </summary>
+    /// <param name="app">The WebApplication instance.</param>
+    //private static IEndpointConventionBuilder AddEndpointIdentityApi(WebApplication app)
+    //{
+    //    // Suppress the default /register endpoint so only custom registration is allowed
+    //    IEndpointConventionBuilder identityApis = app.MapGroup("/account").MapIdentityApi<User>();
+
+    //    _ = identityApis.AddEndpointFilter(async (context, next) =>
+    //    {
+    //        if (context.HttpContext.Request.Path.StartsWithSegments("/register", StringComparison.OrdinalIgnoreCase))
+    //        {
+    //            ClaimsPrincipal user = context.HttpContext.User;
+
+    //            // Check if the user is authenticated and has the specific claim
+    //            if (!user.Identity?.IsAuthenticated == true ||
+    //                !user.HasClaim(c => c.Type == "CanManageUsers"))
+    //            {
+    //                return Results.Forbid();
+    //            }
+    //        }
+    //        return await next(context);
+    //    });
+    //    return identityApis;
+    //}
 }
+
+
 
 
 /// <summary>
