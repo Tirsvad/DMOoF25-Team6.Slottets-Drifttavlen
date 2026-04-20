@@ -7,7 +7,7 @@ on:
 jobs:
   BuildSecrets:
     runs-on: ubuntu-latest
-    environment: Database
+    environment: database
     steps:
       - uses: actions/checkout@v4
       - name: Create .env file
