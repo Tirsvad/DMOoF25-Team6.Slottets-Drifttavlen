@@ -1,6 +1,15 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Core.Interfaces.Repositories;
+
 using Core.Interfaces.Services;
 
 using Domain.Entities;
@@ -18,17 +27,19 @@ namespace Infrastructure.Services;
 internal class AuditService : IAuditService
 {
 
-    //TODO: Fix this to use a mangager for an api call to the database instead of direct access to the dbcontext, this is to avoid tight coupling and make it easier to test and maintain in the future.
-    //private readonly AppDbContext _dbContext;
+   private readonly IAuditRepository _repository;
 
-    //public AuditService(AppDbContext dbContext)
-    //{
-    //    _dbContext = dbContext;
-    //}
+    public AuditService(IAuditRepository repository)
+    {
+        _repository = repository;
+    }   
+
+
+
 
     public async Task LogAsync(string entityName, string changeType, string? changedBy, string description)
     {
-        _ = new AuditLog()
+        var log = new AuditLog()
         {
             Id = Guid.NewGuid(),
             EntityName = entityName,
@@ -38,8 +49,8 @@ internal class AuditService : IAuditService
             Description = description
         };
 
-        //_dbContext.AuditLogs.Add(log);
-        //await _dbContext.SaveChangesAsync();
-        await Task.CompletedTask; // Placeholder for async operation
+        await _repository.AddAsync(log);
+
     }
 }
+    

@@ -7,8 +7,6 @@ using Core.Interfaces.Repositories;
 
 using Domain.Entities;
 
-using Infrastructure.Data.Persistent;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -81,25 +79,9 @@ public class ResidentController(IResidentRepository residentRepository) : Contro
         };
         return Ok(result);
     }
+   
+  }
 
-    /// <summary>
-    /// Retrieves debug information about residents in the database.
-    /// </summary>
-    /// <param name="db">An instance of the application database context.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An <see cref="IActionResult"/> containing the count and IDs of residents.</returns>
-    [HttpGet("debug")]
-    public async Task<IActionResult> Debug([FromServices] AppDbContext db, CancellationToken cancellationToken)
-    {
-        int count = await db.Set<Resident>().CountAsync(cancellationToken);
-        var ids = await db.Set<Resident>()
-            .Select(r => new { r.Id, r.Initials, r.TrafficLightStatus })
-            .ToListAsync(cancellationToken);
 
-        return Ok(new
-        {
-            count,
-            ids
-        });
-    }
-}
+// Debug endpoint removed because it used AppDbContext directly
+// and broke clean architecture. Use repository instead if needed.

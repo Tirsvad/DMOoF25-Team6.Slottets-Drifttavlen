@@ -6,8 +6,11 @@
 
 using System.Text;
 
+using Core;
+
 using Domain.Entities;
 
+using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Data.Persistent;
 
@@ -18,19 +21,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Api;
 
-
-/// <summary>
-/// Entry point and configuration for the API application.
-/// </summary>
-/// <remarks>
-/// Configures services, authentication, authorization, and middleware for the API.
-/// </remarks>
 public class Program
 {
     /// <summary>
-    /// Initializes and runs the API application.
+    /// Entry point and configuration for the API application.
     /// </summary>
-    /// <param name="args">An array of command-line arguments.</param>
+    /// <remarks>
+    /// Configures services, authentication, authorization, and middleware for the API.
+    /// </remarks>
     public static void Main(string[] args)
     {
         // Load environment variables from .env file
@@ -48,45 +46,29 @@ public class Program
             });
         });
 
+       
+
         // Replace the connection string params with the one from the environment variable
+
         ConfigurationManager conf = builder.Configuration;
         string connectionString = ConfigureDbContext(builder, conf);
         // Register both DbContext and DbContextFactory for DI
+
         _ = builder.Services.AddDbContext<AppDbContext>(options =>
         {
-            _ = options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+             _ = options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+          
         });
-        //_ = builder.Services.AddDbContextFactory<AppDbContext>();
 
         _ = builder.Services.AddAuthorization();
 
         _ = builder.Services.AddInfrastructureData();
+        _ = builder.Services.AddInfrastructure();
+        _ = builder.Services.AddCore();
 
         ConfigureIdentity(builder);
         ConfigureJwtAuthentication(builder);
-        //_ = builder.Services.AddAuthentication(options =>
-        //{
-        //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
-        //})
-        //    .
-        //.AddJwtBearer(options =>
-        //{
-        //    string issuer = builder.Configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer not found in configuration.");
-        //    string audience = builder.Configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience not found in configuration.");
-        //    string key = builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("Jwt:SecretKey not found in configuration.");
-        //    options.TokenValidationParameters = new TokenValidationParameters
-        //    {
-        //        ValidateIssuer = true,
-        //        ValidateAudience = true,
-        //        ValidateLifetime = true,
-        //        ValidateIssuerSigningKey = true,
-        //        ValidIssuer = issuer,
-        //        ValidAudience = audience,
-        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-        //    };
-        //});
+
 
         // Add services to the container.
         _ = builder.Services.AddControllers();
@@ -94,10 +76,12 @@ public class Program
 
         _ = builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
+
         // Dummy email sender for Identity (required by MapIdentityApi)
         _ = builder.Services.AddSingleton<IEmailSender<User>, DummyEmailSenderForUser>();
 
         WebApplication app = builder.Build();
+
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -122,6 +106,7 @@ public class Program
         _ = app.MapControllers();
 
         app.Run();
+
     }
 
     /// <summary>
@@ -142,13 +127,6 @@ public class Program
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-        // Add cookie authentication for Identity.Application (default) and Identity.External
-        //_ = builder.Services.ConfigureApplicationCookie(options =>
-        //{
-        //    options.LoginPath = "/Account/Login";
-        //    options.AccessDeniedPath = "/Account/AccessDenied";
-        //    // You can further configure options as needed
-        //});
     }
 
     /// <summary>
@@ -285,3 +263,5 @@ public class DummyEmailSenderForUser : IEmailSender<User>
         return Task.CompletedTask;
     }
 }
+
+

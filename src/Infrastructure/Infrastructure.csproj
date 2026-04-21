@@ -8,9 +8,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
-  </ItemGroup>
 
-  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+
+
     <Content Include="Migrations\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -18,9 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../../.env">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+  
   </ItemGroup>  
   
   <ItemGroup>
