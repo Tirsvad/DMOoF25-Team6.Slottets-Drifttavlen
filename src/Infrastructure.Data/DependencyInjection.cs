@@ -21,7 +21,9 @@ public static class DependencyInjection
         _ = services.AddScoped<IResidentNoteRepository, ResidentNoteRepository>();
         _ = services.AddScoped<IMedicineRepository, MedicineRepository>();
         _ = services.AddScoped<IPainkillerRepository, PainKillerRepository>();
+        _ = services.AddScoped<IAuditRepository, AuditRepository>();
         _ = services.AddScoped<IPhoneAssignmentRepository, PhoneAssignmentRepository>();
+        _ = services.AddScoped<IAuditRepository, AuditRepository>();
 
         // Identity services
         _ = services.AddScoped<IRefreshTokenStore, RefreshTokenStore>();
