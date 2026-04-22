@@ -61,7 +61,6 @@ public class Program
         _ = builder.Services.AddAuthorization();
 
         _ = builder.Services.AddInfrastructureData();
-        _ = builder.Services.AddInfrastructure();
 
         ConfigureIdentity(builder);
         ConfigureJwtAuthentication(builder);
