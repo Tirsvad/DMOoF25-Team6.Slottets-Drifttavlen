@@ -7,7 +7,6 @@ on:
 jobs:
   BuildSecrets:
     runs-on: ubuntu-latest
-    environment: database
     steps:
       - uses: actions/checkout@v4
       - name: Check for ENV_FILE secret
@@ -27,7 +26,6 @@ jobs:
   build:
     needs: BuildSecrets
     runs-on: ubuntu-latest
-    environment: database
     steps:
       - uses: actions/checkout@v4
       - name : Setup .NET
