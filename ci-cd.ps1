@@ -23,8 +23,8 @@ function Convert-LineEndingsToLF {
     foreach ($relativePath in $gitFiles) {
         $fullPath = Join-Path -Path (Get-Location) -ChildPath $relativePath
         if (Test-Path $fullPath) {
-            $content = Get-Content $fullPath -Raw
-            $lfContent = $content -replace "\r\n", "\n" -replace "\r", "\n"
+            $lines = Get-Content $fullPath
+            $lfContent = ($lines -join "`n") + "`n"
             $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
             [System.IO.File]::WriteAllText($fullPath, $lfContent, $utf8NoBom)
         }
