@@ -17,7 +17,7 @@ jobs:
           fi
       - name: Create .env file
         run: |
-          printf "%s" "${{ secrets.ENV_FILE }}" > .env
+          printf '%b' "${{ secrets.ENV_FILE }}" > .env
       - name: Upload .env file as artifact
         uses: actions/upload-artifact@v7
         with:
