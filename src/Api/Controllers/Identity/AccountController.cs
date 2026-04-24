@@ -19,7 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Api.Controllers.Identity;
 
 /// <summary>
-/// Provides endpoints for user account registration, authentication, token refresh, and logout.
+/// Provides endpoints for user Account registration, authentication, token refresh, and logout.
 /// </summary>
 /// <remarks>
 /// This controller manages user identity operations such as registration, login, refresh token exchange, and logout.
@@ -29,7 +29,7 @@ namespace Api.Controllers.Identity;
 public class AccountController(UserManager<User> userManager, IRefreshTokenStore refreshTokenStore) : ControllerBase
 {
     /// <summary>
-    /// Registers a new user account.
+    /// Registers a new user Account.
     /// </summary>
     /// <param name="request">A registration request containing user details and password.</param>
     /// <returns>An <see cref="IActionResult"/> indicating the result of the registration operation.</returns>

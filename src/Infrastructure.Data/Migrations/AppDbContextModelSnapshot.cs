@@ -495,6 +495,80 @@ namespace Infrastructure.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3a21f8e1-885b-4394-abf0-ed0baeea239b"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2ae048a5-4089-4866-bbae-6b8c896c568d",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEPv7fDpIcsRnM6bthNy3PlXT6/eu/Zc/B+pK1pyj2n9gAvJAmFUsxd0+A8n4rWH9xQ==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "PederRasmussen@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("4711a300-711e-4132-86d4-cafd3f11deec"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "32b0c2e2-470b-4d0f-b5a6-d0271c2444ee",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEGkPcN3VXl5xHTsw4G9O5Vvoair18f7sZPblfmC+JWhtSAT+2GjngREVj8xriQbPkg==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "SanneJohansen@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("30cffcf9-5784-4fa9-9c10-c013ef3faf16"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "9d3eb372-ebbf-4653-ad27-ef3b2bb5d5e2",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEAd/f6+5eN0uVCGpBRC+5j3MU91QvTDU9bmTi+Lh4BM5ZSKZ35qFoRlirgF1WwqtOw==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "ThorDanrsøn@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("37155b80-7111-422a-aba6-89d7070f1644"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a5f685cd-3112-4cab-8cc6-b6cb1e7cd7f3",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEPdAn31wb7U9oip2KpO0wrf9cJWrUcsr1PtbQm/4HklurbRpekszyskdTrvz8+LihQ==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "PerNielsen@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("b836e975-e775-48bc-8b84-5d2bdd5bd87a"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "945eb95d-c8bd-4d39-a411-f1bd22e7f277",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEFuNtO1kqWfYlBwnfS3txjCnOLOLAiHxm8dPgoi59P3pV8e399ZF9ewyG3lzSK9Y+w==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "AndersJensen@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("48245a9c-f2a5-4e8f-9554-b6acc9206d37"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f2462914-7aad-4573-a602-fd91b3a744f4",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEGuWtXoi0OnUgP9pB/AthQf4BsOn8LLU1TA8xvyiMKvX4eMIBGlysDDMkKvyjylUvQ==",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "KasperHolm@example.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -572,29 +646,22 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                            ClaimValue = "CanManageUsers",
-                            RoleId = new Guid("fabc2277-7992-491b-ae4a-bc78f8de56aa")
+                            ClaimValue = "CanViewMedicine",
+                            RoleId = new Guid("ee697c76-947a-4fe2-8b14-40194c30bdae")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                            ClaimValue = "CanManageMedicine",
-                            RoleId = new Guid("fabc2277-7992-491b-ae4a-bc78f8de56aa")
+                            ClaimValue = "CanManageResidents",
+                            RoleId = new Guid("d1c9e8b5-3f4a-4c2e-9a1b-5e6f7a8b9c0d")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
                             ClaimValue = "CanViewMedicine",
-                            RoleId = new Guid("ee697c76-947a-4fe2-8b14-40194c30bdae")
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                            ClaimValue = "CanManageResidents",
-                            RoleId = new Guid("ee697c76-947a-4fe2-8b14-40194c30bdae")
+                            RoleId = new Guid("d1c9e8b5-3f4a-4c2e-9a1b-5e6f7a8b9c0d")
                         });
                 });
 

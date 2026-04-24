@@ -77,7 +77,7 @@ services:
     ports:
       - "5051:5051"
     expose:
-      - 5151
+      - 5051
     networks:
       vlan-web:
           ipv4_address: 10.29.30.11
