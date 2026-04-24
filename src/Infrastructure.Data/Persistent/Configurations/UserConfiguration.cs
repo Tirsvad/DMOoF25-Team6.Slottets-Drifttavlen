@@ -17,18 +17,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     public static void SeedingData(EntityTypeBuilder<User> builder)
     {
-        _ = builder.HasData(
-            new User
-            {
-                Id = Guid.Parse("12345678-90AB-CDEF-1234-567890ABCDEF"),
-                Email = "superuser@test.test",
-            },
-            new User
-            {
-                Id = Guid.Parse("ABCDEF12-3456-7890-ABCD-EF1234567890"),
-                Email = "user@test.test"
-            }
-        );
+        User superUser = new()
+        {
+            Id = Guid.Parse("12345678-90AB-CDEF-1234-567890ABCDEF"),
+            Email = "superuser@test.test"
+        };
+        superUser.PasswordHash = PasswordHash(superUser, "Password123!");
+
+        User normalUser = new()
+        {
+            Id = Guid.Parse("ABCDEF12-3456-7890-ABCD-EF1234567890"),
+            Email = "user@test.test"
+        };
+        normalUser.PasswordHash = PasswordHash(normalUser, "Password123!");
+
+        _ = builder.HasData(superUser, normalUser);
     }
 
     public static string PasswordHash(User user, string password)

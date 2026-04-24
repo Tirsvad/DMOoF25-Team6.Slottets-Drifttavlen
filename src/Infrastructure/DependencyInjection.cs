@@ -24,7 +24,14 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         _ = services.AddCore();
-        _ = services.AddHttpClient<IResidentManager, ResidentManager>(client => { client.BaseAddress = new Uri("http://localhost:5151/"); });
+        _ = services.AddHttpClient<IResidentManager, ResidentManager>(client =>
+            {
+                string? baseAddress = Environment.GetEnvironmentVariable("WebApiHostAddress");
+                if (!string.IsNullOrWhiteSpace(baseAddress))
+                {
+                    client.BaseAddress = new Uri(baseAddress);
+                }
+            });
         // _ = services.AddHttpClient<IResidentNoteManager, ResidentNoteManager>(); // TODO: Implement ResidentNoteManager
         // _ = services.AddHttpClient<IPainkillerRecordManager, PainkillerRecordManager>(); // TODO: Implement PainkillerRecordManager
         // _ = services.AddHttpClient<IMedicineRecordManager, MedicineRecordManager>(); // TODO: Implement MedicineRecordManager
