@@ -120,17 +120,21 @@ cd DMOoF25-Team6.Slottets-Drifttavlen
 Opret en `.env`-fil i projektroden med følgende indhold:
 ```sh
 MYSQL_ROOT_PASSWORD=rootpassword
----
-
 MYSQL_DATABASE=slottetsdb
 MYSQL_USER=appuser
 MYSQL_PASSWORD=apppassword
-MYSQL_HOST=localhost
-ConnectionStrings__AppDbContext=Server={DB_HOST};Port=3307;Database={DB_NAME};User={DB_USER};Password={DB_PASSWORD};
+MYSQL_HOST=slottets-sqlserver
+ConnectionStrings__AppDbContext=Server=slottets-sqlserver;Port=3306;Database=slottetsdb;User=appuser;Password=apppassword;
 TokenValidationParameters__IssuerSigningKey=YOUR_SECRET_KEY_HERE
-TokenValidationParameters__Issuer=slottets-drifttavlen
-TokenValidationParameters__Audience=slottets-drifttavlen
+TokenValidationParameters__Issuer=http://localhost
+TokenValidationParameters__Audience=http://localhost
+ExpireMinutes=60
 ```
+
+> ⚠️ **Påkrævede mapper:** Opret følgende mapper i projektroden før du kører `docker-compose up`, ellers fejler Docker Compose:
+> ```sh
+> mkdir -p Data DataProtection-Keys src/WebUI/WebUI/DataProtection-Keys
+> ```
 
 ### Docker database
 Ændrer værdierne i `.env`-filen i projektroden til dine ønskede databaseindstillinger:
@@ -154,9 +158,31 @@ docker-compose down slottets-sqlserver
 ```
 
 ### Kør applikationen
+
+> ⚠️ **VIGTIGT:** Projektet kører **udelukkende** via Docker Compose.
+> Brug **IKKE** `dotnet run` eller `launchSettings.json`.
+> `launchSettings.json` er IDE-specifik og giver forskellige porte og miljøvariable afhængigt af OS og IDE (Visual Studio, VS Code osv.).
+> Docker Compose sikrer at **alle teammedlemmer kører identisk miljø** med samme porte, netværk og konfiguration — og at MySQL, API og WebUI starter i korrekt rækkefølge.
+
 ```sh
 docker-compose up
 ```
+
+Sørg for at portene i `docker-compose.yml` er konfigureret korrekt:
+
+| Service | Port |
+|---------|------|
+| WebUI   | 5050 |
+| API     | 5051 |
+| MySQL   | 3307 |
+
+Når applikationen kører, er den tilgængelig på:
+
+| Service | URL |
+|---------|-----|
+| WebUI   | http://localhost:5050 |
+| API     | http://localhost:5051 |
+| MySQL   | localhost:3307 |
 
 Alternativt direkte med Docker:
 ```sh
