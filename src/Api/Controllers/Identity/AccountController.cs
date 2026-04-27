@@ -87,6 +87,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             ExpiresAt = DateTime.UtcNow.AddDays(7),
             CreatedByIp = ipAddress
         };
+
         await refreshTokenStore.SaveAsync(refreshToken);
 
         return Ok(new LoginResponseDto
@@ -248,11 +249,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
         }
 
         RefreshToken? refreshToken = await refreshTokenStore.GetByTokenAsync(token);
-        if (refreshToken == null || refreshToken.ExpiresAt < DateTime.UtcNow || refreshToken.RevokedAt != null)
-        {
-            return null;
-        }
-        return refreshToken;
+        return refreshToken == null || refreshToken.ExpiresAt < DateTime.UtcNow || refreshToken.RevokedAt != null ? null : refreshToken;
     }
 
     // Helper: Retrieve and validate user by id

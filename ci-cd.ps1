@@ -105,10 +105,10 @@ function Invoke-TestsStage {
     }
 }
 
-# Test-NotOnMainBranch
-# Test-NoUncommittedChanges
+Test-NotOnMainBranch
+Test-NoUncommittedChanges
 Convert-LineEndingsToLF
 Start-SqlServer
-#Invoke-CommitLineEndingFixIfNeeded
+Invoke-CommitLineEndingFixIfNeeded
 Invoke-TestsStage
-# git push
+git push

@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject WebUI.Client.AuthService AuthService
 
 <PageTitle>Home</PageTitle>
 
@@ -24,13 +25,8 @@
           <li>@claim.Type: @claim.Value</li>
         }
       </ul>
-      <form action="Account/Logout" method="post">
-        <AntiforgeryToken />
-        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-        <button type="submit" class="nav-link">
-          <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-        </button>
-      </form>
+
+      <button @onclick="Logout">Logout</button>
     }
     else
     {
@@ -56,12 +52,14 @@
 @code {
   private bool isInteractive = false;
   private System.Security.Claims.ClaimsPrincipal? user;
+  private string? currentUrl;
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
     if (firstRender)
     {
       isInteractive = true;
+      currentUrl = Navigation.Uri;
       var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
       user = authState.User;
       StateHasChanged();
@@ -72,8 +70,14 @@
   {
     if (isInteractive)
     {
-      Navigation.NavigateTo("Account/login");
+      Navigation.NavigateTo("/login");
     }
+  }
+
+  private async Task Logout()
+  {
+    await AuthService.LogoutAsync();
+    Navigation.NavigateTo("/");
   }
 
 }

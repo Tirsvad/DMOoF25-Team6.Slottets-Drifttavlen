@@ -203,20 +203,32 @@ namespace Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("RevokedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("RevokedReason")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -501,13 +513,13 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = new Guid("3a21f8e1-885b-4394-abf0-ed0baeea239b"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c0a8de98-72fc-4e74-a74b-9a9d1ade23d2",
+                            ConcurrencyStamp = "fd8e4e86-24e0-4370-8b2a-14ee454895ba",
                             Email = "PederRasmussen@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PEDERRASMUSSEN@EXAMPLE.COM",
                             NormalizedUserName = "PEDERRASMUSSEN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAzXP4vRpawd3y9YDIrB1jmIDhRCsI885hy9jup5IpEdXfisqEE3qJ65KMKAE72bSQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAutYpQDOVYhG4UBgpIRrzDEXYsrXbyUb2SIVvMibjkcoEQcMap4658Pj6eMgMxv/Q==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "pederrasmussen@example.com"
@@ -516,13 +528,13 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = new Guid("4711a300-711e-4132-86d4-cafd3f11deec"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6305cea9-712a-4b84-8ab9-086f2902242e",
+                            ConcurrencyStamp = "1744bc8e-e309-4168-b7ab-658bd6097b7f",
                             Email = "SanneJohansen@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SANNEJOHANSEN@EXAMPLE.COM",
                             NormalizedUserName = "SANNEJOHANSEN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENsAahI0ZU7aS/TvmVM1DIuWb9Es5q5EsPhtLL3G9jGsgnLwLWmEuQrGvqnaCBUf7w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIwODEqVfXAUy9S5JCq/n2czH5QhDhLNo+p0Ns1xXYxgRUDJYH7oYQd0lQ8a0HyDTA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "sannejohansen@example.com"
@@ -531,13 +543,13 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = new Guid("30cffcf9-5784-4fa9-9c10-c013ef3faf16"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3ff4376f-b0ea-41f5-918b-f9da48137c89",
+                            ConcurrencyStamp = "d673d5fa-2510-4309-a83b-bd8d7c7ae901",
                             Email = "ThorDanrsøn@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "THORDANRSØN@EXAMPLE.COM",
                             NormalizedUserName = "THORDANRSØN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECATdRwOyZZcfrVbyq/dq1+huJQw67dUhgDWMScikDMs+qdP0NUC6XFWJ6fttnPKLg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENCFEsdm62Th/ALwAnsygJAMqRGKcgGaXr5Uu6EiKxCEsVVUvswncSpD2TPC7g3h/g==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "thordanrsøn@example.com"
@@ -546,13 +558,13 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = new Guid("37155b80-7111-422a-aba6-89d7070f1644"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "770cc175-a571-4d1e-ac5f-83bda541d05b",
+                            ConcurrencyStamp = "7909355b-8002-4518-b35b-efbd22e0d770",
                             Email = "PerNielsen@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PERNIELSEN@EXAMPLE.COM",
                             NormalizedUserName = "PERNIELSEN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGHkTkzU/zdlwTEwIuSdGLIregR3ZdvB4ewMn+sMd046mdIsrEZ3b7yXNjgguVCaAQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEATpfHdrqE+y2JgwFgJRrDP7gouGjLuLojPwrR4ZX701EnEWveWm7/epWRAZ/pVFFQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "pernielsen@example.com"
@@ -561,13 +573,13 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = new Guid("b836e975-e775-48bc-8b84-5d2bdd5bd87a"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1dd96a17-8933-4908-a4bb-531a0907577f",
+                            ConcurrencyStamp = "6bc3b61d-534d-4281-b265-d63ced233cf0",
                             Email = "AndersJensen@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ANDERSJENSEN@EXAMPLE.COM",
                             NormalizedUserName = "ANDERSJENSEN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEL+x62yuIxBr4jap3O/HovRFLKLWQxQg24T8Ae0BHymQ0rCAs7+ZOtq15oJ5gfg9Vw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKkkur+eelQ0AbQg30ZNM/hwOKAX7QMvuP5d+iEBL1I47Ypp8DttMIOCj6BqmNQ5VA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "andersjensen@example.com"
@@ -576,13 +588,13 @@ namespace Infrastructure.Data.Migrations
                         {
                             Id = new Guid("48245a9c-f2a5-4e8f-9554-b6acc9206d37"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "94ed32c5-60d9-4486-aa29-241c84b6080b",
+                            ConcurrencyStamp = "034d08c2-264f-4505-8529-4f2097401b58",
                             Email = "KasperHolm@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KASPERHOLM@EXAMPLE.COM",
                             NormalizedUserName = "KASPERHOLM@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELv2mMfYgroVccFldkLmvuGF0mgXPtsdgw8IfRUyObpUcyYNEnCPHEHX+ALvm2oqhA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOaYCzxaHaQGqGMYQSNxQ7f1yPkXfwQhh309Wd6aHp9Fv44S6oI7i65jLjyCPyL8BQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kasperholm@example.com"
