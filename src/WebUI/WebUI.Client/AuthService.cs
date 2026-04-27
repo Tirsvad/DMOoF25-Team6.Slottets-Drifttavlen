@@ -41,7 +41,7 @@ public class AuthService(
     /// </summary>
     public async Task LogoutAsync()
     {
-        LogoutRequestDto logoutRequest = new() { JwtToken = (await tokenStorageService.GetTokenAsync()) ?? string.Empty };
+        LogoutRequestDto logoutRequest = new() { RefreshToken = await tokenStorageService.GetTokenAsync() ?? string.Empty };
         _ = await accountService.LogoutAsync(logoutRequest);
         await tokenStorageService.RemoveTokenAsync();
         (authenticationStateProvider as JwtAuthenticationStateProvider)?.NotifyAuthenticationStateChanged();

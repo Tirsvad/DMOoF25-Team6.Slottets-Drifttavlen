@@ -34,6 +34,8 @@ public class Program
 
         _ = builder.Configuration.AddEnvironmentVariables(); // Ensure environment variables are available in configuration
 
+        _ = builder.Services.AddInfrastructure(builder.Configuration);
+
         // Add services to the container.
         _ = builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents()
@@ -41,13 +43,9 @@ public class Program
 
         _ = builder.Services.AddCascadingAuthenticationState();
 
-
-
         // Persist Data Protection keys to a directory for antiforgery token decryption across restarts/containers
         _ = builder.Services.AddDataProtection()
             .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysDir));
-
-        _ = builder.Services.AddInfrastructure(builder.Configuration);
 
         // And for the interface, e.g.:
         _ = builder.Services.AddScoped<IAccountManager, AccountManager>();

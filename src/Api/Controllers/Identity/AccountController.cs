@@ -156,7 +156,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
     /// <returns>An <see cref="IActionResult"/> indicating the result of the logout operation.</returns>
     /// <response code="200">Logout succeeded.</response>
     [HttpPost("logout")]
-    public async Task<IActionResult> LogoutAsync()
+    public async Task<IActionResult> LogoutAsync([FromBody] LogoutRequestDto request)
     {
         if (!ModelState.IsValid)
         {
@@ -164,7 +164,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
         }
 
         // Expect refresh token in request header or body for revocation
-        string? refreshToken = Request.Headers["X-Refresh-Token"].FirstOrDefault();
+        string? refreshToken = Request.Headers["X-Refresh-Token"].FirstOrDefault() ?? request.RefreshToken;
         if (string.IsNullOrWhiteSpace(refreshToken))
         {
             return BadRequest(new LogoutResponseDto
