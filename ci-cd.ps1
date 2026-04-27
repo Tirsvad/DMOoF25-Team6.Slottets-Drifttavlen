@@ -105,6 +105,9 @@ function Invoke-TestsStage {
     }
 }
 
+# Auto setup remote tracking branches on push
+git config --global push.autoSetupRemote true
+
 Test-NotOnMainBranch
 Test-NoUncommittedChanges
 Convert-LineEndingsToLF
