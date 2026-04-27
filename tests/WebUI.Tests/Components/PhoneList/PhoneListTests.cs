@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Moq;
 
-using WebUI.Components.PhoneList;
+using PhoneListComponent = WebUI.Components.PhoneList.PhoneList;
 
 using Xunit;
 
@@ -48,7 +48,7 @@ public class PhoneListTests : Bunit.TestContext
             .ReturnsAsync([]);
 
         // Act
-        IRenderedComponent<PhoneList> cut = RenderComponent<PhoneList>();
+        IRenderedComponent<PhoneListComponent> cut = RenderComponent<PhoneListComponent>();
 
         // Assert
         cut.WaitForAssertion(() => Assert.NotNull(cut.Find("table")));
@@ -68,7 +68,7 @@ public class PhoneListTests : Bunit.TestContext
             .ReturnsAsync(assignments);
 
         // Act
-        IRenderedComponent<PhoneList> cut = RenderComponent<PhoneList>();
+        IRenderedComponent<PhoneListComponent> cut = RenderComponent<PhoneListComponent>();
 
         // Assert
         cut.WaitForAssertion(() => Assert.Contains("41522", cut.Markup));
@@ -88,7 +88,7 @@ public class PhoneListTests : Bunit.TestContext
             .ReturnsAsync(assignments);
 
         // Act
-        IRenderedComponent<PhoneList> cut = RenderComponent<PhoneList>();
+        IRenderedComponent<PhoneListComponent> cut = RenderComponent<PhoneListComponent>();
 
         // Assert
         cut.WaitForAssertion(() => Assert.Contains("Anna", cut.Markup));
@@ -103,7 +103,7 @@ public class PhoneListTests : Bunit.TestContext
             .ThrowsAsync(new HttpRequestException("Connection failed"));
 
         // Act
-        IRenderedComponent<PhoneList> cut = RenderComponent<PhoneList>();
+        IRenderedComponent<PhoneListComponent> cut = RenderComponent<PhoneListComponent>();
 
         // Assert
         cut.WaitForAssertion(() => Assert.Contains("Kunne ikke hente", cut.Markup));
@@ -118,7 +118,7 @@ public class PhoneListTests : Bunit.TestContext
             .ReturnsAsync([]);
 
         // Act
-        IRenderedComponent<PhoneList> cut = RenderComponent<PhoneList>();
+        IRenderedComponent<PhoneListComponent> cut = RenderComponent<PhoneListComponent>();
 
         // Assert
         cut.WaitForAssertion(() => Assert.Contains("Vagt:", cut.Markup));
