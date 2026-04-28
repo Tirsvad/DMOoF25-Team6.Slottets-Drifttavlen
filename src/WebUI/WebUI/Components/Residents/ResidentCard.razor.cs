@@ -1,7 +1,11 @@
 // Copyright (c) 2026 Team6. All rights reserved.
 // No warranty, explicit or implicit, provided.
 
+using System.Net.Http.Json;
+
+using Core.DTOs;
 using Core.Interfaces.Services;
+
 
 using Domain.Entities;
 using Domain.Enums;
@@ -24,6 +28,9 @@ public partial class ResidentCard : ComponentBase
     [Inject]
     private IResidentNoteService ResidentNoteService { get; set; } = default!;
 
+    private IMedicineStatusService MedicineStatusService { get; set; } = default!;
+
+
     #endregion
 
     #region Fields
@@ -36,6 +43,9 @@ public partial class ResidentCard : ComponentBase
     private string _feedbackMessage = string.Empty;
     private string _feedbackClass = string.Empty;
 
+    private MedicineStatusDto? _medicineStatus;
+    private PainkillerStatusDto? _painkillerStatus;
+
     #endregion
 
     #region Lifecycle
@@ -43,6 +53,7 @@ public partial class ResidentCard : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await LoadNotes();
+        await LoadMedicineStatus();
     }
 
     #endregion
@@ -183,6 +194,12 @@ public partial class ResidentCard : ComponentBase
             TrafficLightStatus.Red => "resident-red",
             _ => "resident-default"
         };
+    }
+
+    private async Task LoadMedicineStatus()
+    {
+        _medicineStatus = await MedicineStatusService.GetMedicineStatusAsync(Resident.Id);
+        _painkillerStatus = await MedicineStatusService.GetPainkillerStatusAsync(Resident.Id);
     }
 
     #endregion
