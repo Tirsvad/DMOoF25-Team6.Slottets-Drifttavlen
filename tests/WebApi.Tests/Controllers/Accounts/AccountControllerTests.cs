@@ -48,7 +48,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         Assert.False(string.IsNullOrWhiteSpace(loginContent.RefreshToken));
 
         // Act: Call logout endpoint with refresh token header and body
-        var logoutRequest = new LogoutRequestDto { RefreshToken = loginContent.RefreshToken };
+        LogoutRequestDto logoutRequest = new() { RefreshToken = loginContent.RefreshToken };
         HttpRequestMessage requestMessage = new(HttpMethod.Post, "/Account/logout")
         {
             Content = JsonContent.Create(logoutRequest)
@@ -159,7 +159,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         // Logout with refresh token in header
         HttpRequestMessage logoutReq = new(HttpMethod.Post, "/Account/logout");
         logoutReq.Headers.Add("X-Refresh-Token", refreshToken);
-        var logoutDto = new LogoutRequestDto { RefreshToken = refreshToken };
+        LogoutRequestDto logoutDto = new() { RefreshToken = refreshToken };
         logoutReq.Content = JsonContent.Create(logoutDto);
         HttpResponseMessage logoutResp = await _client.SendAsync(logoutReq, TestContext.Current.CancellationToken);
         _ = logoutResp.EnsureSuccessStatusCode();
