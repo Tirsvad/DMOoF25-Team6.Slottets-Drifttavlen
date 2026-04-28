@@ -1,12 +1,7 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 using Core.DTOs;
 using Core.Interfaces.Managers;
@@ -17,19 +12,13 @@ namespace Infrastructure.Services;
 /// </summary>
 
 
-public class MedicineStatusManager : IMedicineStatusManager
+public class MedicineStatusManager(IHttpClientFactory httpClientFactory) : IMedicineStatusManager
 {
 
-    private readonly HttpClient _httpClient;
-
-    public MedicineStatusManager(IHttpClientFactory httpClientFactory)
-    {
-        _httpClient = httpClientFactory.CreateClient("SlottetApi") 
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("SlottetApi")
             ?? throw new InvalidOperationException("Failed to create HttpClient.");
 
-    }
 
-        
 
     /// <summary>
     /// Retrieves medicine status for a resident.
