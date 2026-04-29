@@ -2,8 +2,9 @@ services:
   slottets-sqlserver:
     image: mysql
     restart: always
-    env_file:
-      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: luluogmanse
+      MYSQL_DATABASE: caremanagement
     ports:
       - "3307:3306"
     volumes:
@@ -14,7 +15,7 @@ services:
 
   build-stage:
     profiles:
-      - test  
+      - test
     build:
       context: .
       dockerfile: Dockerfile
@@ -25,7 +26,6 @@ services:
     restart: "no"
     networks:
       vlan-db:
-      # vlan-app:
 
   tests-stage:
     profiles:
@@ -48,18 +48,17 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - DOTNET_RUNNING_IN_CONTAINER=true
       - DOTNET_CLI_TELEMETRY_OPTOUT=1
-      - DOCKER_DOTNET_TEST=true  
+      - DOCKER_DOTNET_TEST=true
     working_dir: /workspace
     volumes:
       - ./TestResults:/artifacts/TestResults
     networks:
       vlan-db:
-      # vlan-app:
     restart: "no"
 
   publish-stage:
     profiles:
-      - test  
+      - test
     build:
       context: .
       dockerfile: Dockerfile
@@ -69,7 +68,7 @@ services:
         condition: service_completed_successfully
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-    restart: no
+    restart: "no"
 
   webapi-final-stage:
     profiles:
@@ -95,14 +94,14 @@ services:
     networks:
       vlan-db:
       vlan-web:
-          ipv4_address: 10.29.30.11
+        ipv4_address: 10.29.30.11
     volumes:
       - ./DataProtection-Keys:/root/.aspnet/DataProtection-Keys
     restart: "always"
 
   webui-final-stage:
     profiles:
-      - prod  
+      - prod
     build:
       context: .
       dockerfile: Dockerfile
@@ -121,7 +120,7 @@ services:
       - ./src/WebUI/WebUI/DataProtection-Keys:/app/DataProtection-Keys
     networks:
       vlan-web:
-          ipv4_address: 10.29.30.10
+        ipv4_address: 10.29.30.10
     restart: "always"
 
 volumes:

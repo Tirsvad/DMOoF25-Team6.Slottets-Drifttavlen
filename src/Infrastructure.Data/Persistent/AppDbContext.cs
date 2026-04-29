@@ -4,6 +4,7 @@
 using Domain.Entities;
 
 using Infrastructure.Data.Persistent.Configurations;
+using Infrastructure.Data.Persistent.Views;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
