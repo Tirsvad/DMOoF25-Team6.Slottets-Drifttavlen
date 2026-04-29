@@ -12,6 +12,8 @@ using Core.Mappers.Accounts;
 
 using Domain.Entities;
 
+using Infrastructure.Authentication;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -26,8 +28,33 @@ namespace Api.Controllers.Identity;
 /// </remarks>
 [Route("[controller]")]
 [ApiController]
-public class AccountController(UserManager<User> userManager, IRefreshTokenStore refreshTokenStore) : ControllerBase
+public class AccountController(UserManager<User> userManager, IRefreshTokenStore refreshTokenStore, JwtSettings jwtSettings) : ControllerBase
 {
+    private readonly JwtSettings _jwtSettings = jwtSettings;
+
+    [HttpPost("toekn")]
+    public IActionResult GenerateToken()
+    {
+        _ = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, "testuser"),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_jwtSettings.IssuerSigningKey));
+        _ = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        JwtSecurityToken tokenOptions = new(
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
+            claims: null,
+            expires: DateTime.Now.AddMinutes(int.Parse(Environment.GetEnvironmentVariable("TokenValidationParameters__ExpireMinutes") ?? throw new InvalidOperationException("ExpireMinutes not found in environment variables."))),
+            signingCredentials: null
+        );
+
+        return Ok(new JwtSecurityTokenHandler().WriteToken(tokenOptions));
+    }
+
+
     /// <summary>
     /// Registers a new user Account.
     /// </summary>
@@ -75,7 +102,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             return Unauthorized(new LoginResponseDto { ErrorMessages = ["Invalid email or password."] });
         }
 
-        string token = GenerateJwtToken();
+        string token = GenerateJwtToken(user);
         string refreshTokenValue = GenerateRefreshToken();
         string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         RefreshToken refreshToken = new()
@@ -84,7 +111,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             UserId = user.Id,
             Token = refreshTokenValue,
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            ExpiresAt = DateTime.UtcNow.AddHours(8),
             CreatedByIp = ipAddress
         };
 
@@ -130,7 +157,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             return Unauthorized(new RefreshTokenResponseDto { ErrorMessages = ["User not found or email unavailable."] });
         }
 
-        string token = GenerateJwtToken();
+        string token = GenerateJwtToken(user);
         string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         RefreshToken newRefreshToken = new()
         {
@@ -198,8 +225,14 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
     /// </remarks>
     /// <returns>A JWT access token as a string.</returns>
     /// <exception cref="InvalidOperationException">IssuerSigningKey not found in environment variables.</exception>
-    private static string GenerateJwtToken()
+    private static string GenerateJwtToken(User user)
     {
+        _ = new[]
+{
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? "Ukendt"),
+            new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString())
+        };
+
         string key = Environment.GetEnvironmentVariable("TokenValidationParameters__IssuerSigningKey") ?? throw new InvalidOperationException("IssuerSigningKey not found in environment variables.");
         SymmetricSecurityKey secretKey = new(Encoding.UTF8.GetBytes(key));
         SigningCredentials signingCredentials = new(secretKey, SecurityAlgorithms.HmacSha256);
