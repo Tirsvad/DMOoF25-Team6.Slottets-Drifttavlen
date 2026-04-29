@@ -30,7 +30,7 @@ Replace all placeholders in the template with project-specific content.
 - Use the provided markdown template for consistency.
 
 ### File Naming
-- Name files and folders without spaces, using digits for use case numbers, following the pattern: `uc-<use case identifier>.md` (e.g., `uc-003.md`).
+- Name files and folders without spaces, using digits for use case numbers, following the pattern: `uc-<use case identifier>.md` (e.g., `uc-003.md` or `uc-003c.md` for a create operation in CRUD).
 
 ## Common Patterns
 ### Good Example
