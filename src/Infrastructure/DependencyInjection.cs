@@ -23,6 +23,7 @@ public static class DependencyInjection
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        _ = DotNetEnv.Env.Load(AppContext.BaseDirectory); // Load environment variables from .env file
         _ = services.AddCore();
         string? apiBaseUrl = configuration["WebApiHostAddress"];
         Console.WriteLine("[DEBUG] WebApiHostAddress: " + apiBaseUrl);

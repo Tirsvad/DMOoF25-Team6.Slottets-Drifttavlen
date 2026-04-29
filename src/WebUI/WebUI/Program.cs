@@ -5,6 +5,7 @@ using Core.Interfaces.Managers;
 using Core.Services;
 
 using Infrastructure;
+using Infrastructure.Authentication;
 using Infrastructure.Managers;
 
 using Microsoft.AspNetCore.Components.Authorization;
@@ -35,6 +36,7 @@ public class Program
         _ = builder.Configuration.AddEnvironmentVariables(); // Ensure environment variables are available in configuration
 
         _ = builder.Services.AddInfrastructure(builder.Configuration);
+        _ = builder.Services.AddInfrastructureAuthentication(builder.Configuration);
 
         // Add services to the container.
         _ = builder.Services.AddRazorComponents()

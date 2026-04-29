@@ -4,17 +4,14 @@
 
 // For SwaggerGen extension methods
 
-using System.Text;
-
 using Domain.Entities;
 
+using Infrastructure.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Data.Persistent;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Api;
 
@@ -67,7 +64,7 @@ public class Program
         _ = builder.Services.AddInfrastructureData();
 
         ConfigureIdentity(builder);
-        ConfigureJwtAuthentication(builder);
+        builder.Services.AddInfrastructureAuthentication(builder.Configuration);
 
         // Add services to the container.
         _ = builder.Services.AddControllers();
@@ -125,36 +122,6 @@ public class Program
     }
 
     /// <summary>
-    /// Configures JWT Bearer authentication for the application.
-    /// </summary>
-    /// <param name="builder">A web application builder instance.</param>
-    private static void ConfigureJwtAuthentication(WebApplicationBuilder builder)
-    {
-        _ = builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-            .AddJwtBearer(options =>
-            {
-                // Use configuration values for TokenValidationParameters validation
-                string issuer = builder.Configuration["TokenValidationParameters:Issuer"] ?? throw new InvalidOperationException("TokenValidationParameters:Issuer not found in configuration.");
-                string audience = builder.Configuration["TokenValidationParameters:Audience"] ?? throw new InvalidOperationException("TokenValidationParameters:Audience not found in configuration.");
-                string key = builder.Configuration["TokenValidationParameters:IssuerSigningKey"] ?? throw new InvalidOperationException("TokenValidationParameters  :IssuerSigningKey not found in configuration.");
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = issuer,
-                    ValidAudience = audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-                };
-            });
-    }
-
-    /// <summary>
     /// Configures the database context connection string using environment variables.
     /// </summary>
     /// <param name="builder">A web application builder instance.</param>
@@ -196,80 +163,50 @@ public class Program
     }
 
     /// <summary>
-    /// Adds the Identity API endpoints with custom registration authorization.
+    /// Dummy email sender implementation for development and testing.
     /// </summary>
-    /// <param name="app">The WebApplication instance.</param>
-    //private static IEndpointConventionBuilder AddEndpointIdentityApi(WebApplication app)
-    //{
-    //    // Suppress the default /register endpoint so only custom registration is allowed
-    //    IEndpointConventionBuilder identityApis = app.MapGroup("/Account").MapIdentityApi<User>();
-
-    //    _ = identityApis.AddEndpointFilter(async (context, next) =>
-    //    {
-    //        if (context.HttpContext.Request.Path.StartsWithSegments("/register", StringComparison.OrdinalIgnoreCase))
-    //        {
-    //            ClaimsPrincipal user = context.HttpContext.User;
-
-    //            // Check if the user is authenticated and has the specific claim
-    //            if (!user.Identity?.IsAuthenticated == true ||
-    //                !user.HasClaim(c => c.Type == "CanManageUsers"))
-    //            {
-    //                return Results.Forbid();
-    //            }
-    //        }
-    //        return await next(context);
-    //    });
-    //    return identityApis;
-    //}
-}
-
-
-
-
-/// <summary>
-/// Dummy email sender implementation for development and testing.
-/// </summary>
-/// <remarks>
-/// This class is used to satisfy the <see cref="IEmailSender{TUser}"/> dependency for Identity without sending real emails.
-/// </remarks>
-public class DummyEmailSenderForUser : IEmailSender<User>
-{
-    /// <summary>
-    /// Simulates sending a confirmation link email.
-    /// </summary>
-    /// <param name="user">A user entity.</param>
-    /// <param name="email">An email address.</param>
-    /// <param name="confirmationLink">A confirmation link.</param>
-    /// <returns>A completed task.</returns>
-    public Task SendConfirmationLinkAsync(User user, string email, string confirmationLink)
+    /// <remarks>
+    /// This class is used to satisfy the <see cref="IEmailSender{TUser}"/> dependency for Identity without sending real emails.
+    /// </remarks>
+    public class DummyEmailSenderForUser : IEmailSender<User>
     {
-        // Log or ignore in development
-        return Task.CompletedTask;
-    }
+        /// <summary>
+        /// Simulates sending a confirmation link email.
+        /// </summary>
+        /// <param name="user">A user entity.</param>
+        /// <param name="email">An email address.</param>
+        /// <param name="confirmationLink">A confirmation link.</param>
+        /// <returns>A completed task.</returns>
+        public Task SendConfirmationLinkAsync(User user, string email, string confirmationLink)
+        {
+            // Log or ignore in development
+            return Task.CompletedTask;
+        }
 
-    /// <summary>
-    /// Simulates sending a password reset link email.
-    /// </summary>
-    /// <param name="user">A user entity.</param>
-    /// <param name="email">An email address.</param>
-    /// <param name="resetLink">A password reset link.</param>
-    /// <returns>A completed task.</returns>
-    public Task SendPasswordResetLinkAsync(User user, string email, string resetLink)
-    {
-        // Log or ignore in development
-        return Task.CompletedTask;
-    }
+        /// <summary>
+        /// Simulates sending a password reset link email.
+        /// </summary>
+        /// <param name="user">A user entity.</param>
+        /// <param name="email">An email address.</param>
+        /// <param name="resetLink">A password reset link.</param>
+        /// <returns>A completed task.</returns>
+        public Task SendPasswordResetLinkAsync(User user, string email, string resetLink)
+        {
+            // Log or ignore in development
+            return Task.CompletedTask;
+        }
 
-    /// <summary>
-    /// Simulates sending a password reset code email.
-    /// </summary>
-    /// <param name="user">A user entity.</param>
-    /// <param name="email">An email address.</param>
-    /// <param name="resetCode">A password reset code.</param>
-    /// <returns>A completed task.</returns>
-    public Task SendPasswordResetCodeAsync(User user, string email, string resetCode)
-    {
-        // Log or ignore in development
-        return Task.CompletedTask;
+        /// <summary>
+        /// Simulates sending a password reset code email.
+        /// </summary>
+        /// <param name="user">A user entity.</param>
+        /// <param name="email">An email address.</param>
+        /// <param name="resetCode">A password reset code.</param>
+        /// <returns>A completed task.</returns>
+        public Task SendPasswordResetCodeAsync(User user, string email, string resetCode)
+        {
+            // Log or ignore in development
+            return Task.CompletedTask;
+        }
     }
 }
