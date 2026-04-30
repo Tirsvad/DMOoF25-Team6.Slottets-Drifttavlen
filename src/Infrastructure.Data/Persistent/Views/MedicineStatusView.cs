@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities;
+namespace Infrastructure.Data.Persistent.Views;
 
-public class PainkillerStatusView
+public class MedicineStatusView
 {
     public Guid ResidentId { get; set; }
     public string Name { get; set; } = string.Empty;
-    public int ActivePainkillers { get; set; }
+    public int ActiveMedicines { get; set; }
 
 }
