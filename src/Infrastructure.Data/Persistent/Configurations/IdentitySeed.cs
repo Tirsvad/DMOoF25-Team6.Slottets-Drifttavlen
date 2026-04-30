@@ -22,6 +22,7 @@ public static class IdentitySeed
         NormalizedUserName = "PEDERRASMUSSEN@EXAMPLE.COM",
         Email = "PederRasmussen@example.com",
         NormalizedEmail = "PEDERRASMUSSEN@EXAMPLE.COM",
+        SecurityStamp = Guid.NewGuid().ToString(),
         EmailConfirmed = true
     };
     public static readonly User superUser = new()
@@ -31,6 +32,7 @@ public static class IdentitySeed
         NormalizedUserName = "SANNEJOHANSEN@EXAMPLE.COM",
         Email = "SanneJohansen@example.com",
         NormalizedEmail = "SANNEJOHANSEN@EXAMPLE.COM",
+        SecurityStamp = Guid.NewGuid().ToString(),
         EmailConfirmed = true
     };
     public static readonly User normal1User = new()
@@ -40,6 +42,7 @@ public static class IdentitySeed
         NormalizedUserName = "THORDANRSØN@EXAMPLE.COM",
         Email = "ThorDanrsøn@example.com",
         NormalizedEmail = "THORDANRSØN@EXAMPLE.COM",
+        SecurityStamp = Guid.NewGuid().ToString(),
         EmailConfirmed = true
     };
     public static readonly User normal2User = new()
@@ -49,6 +52,7 @@ public static class IdentitySeed
         NormalizedUserName = "PERNIELSEN@EXAMPLE.COM",
         Email = "PerNielsen@example.com",
         NormalizedEmail = "PERNIELSEN@EXAMPLE.COM",
+        SecurityStamp = Guid.NewGuid().ToString(),
         EmailConfirmed = true
     };
     public static readonly User normal3User = new()
@@ -58,6 +62,7 @@ public static class IdentitySeed
         NormalizedUserName = "ANDERSJENSEN@EXAMPLE.COM",
         Email = "AndersJensen@example.com",
         NormalizedEmail = "ANDERSJENSEN@EXAMPLE.COM",
+        SecurityStamp = Guid.NewGuid().ToString(),
         EmailConfirmed = true
     };
     public static readonly User substitutUser = new()
@@ -67,6 +72,7 @@ public static class IdentitySeed
         NormalizedUserName = "KASPERHOLM@EXAMPLE.COM",
         Email = "KasperHolm@example.com",
         NormalizedEmail = "KASPERHOLM@EXAMPLE.COM",
+        SecurityStamp = Guid.NewGuid().ToString(),
         EmailConfirmed = true
     };
 

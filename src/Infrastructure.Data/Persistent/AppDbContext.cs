@@ -24,11 +24,6 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : Iden
     // Identity-related DbSet for refresh tokens
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
-    public DbSet<PhoneAssignmentView> PhoneAssignmentView { get; set; }
-
-    // Why do we have these views as DbSet? They are not entities!
-    public DbSet<MedicineStatusView> MedicineStatusView { get; set; }
-    public DbSet<PainkillerStatusView> PainkillerStatusView { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => base.SaveChangesAsync(cancellationToken);

@@ -34,13 +34,28 @@ public class PhoneAssignmentRepository(AppDbContext dbContext)
         string shiftType, CancellationToken cancellationToken)
     {
         // Use the vwPhoneAssignment view to get phone assignments with caregiver name
-        return await _dbContext.PhoneAssignmentView
+        //return await _dbContext.PhoneAssignmentView
+        //    .Where(p => p.ShiftType == shiftType)
+        //    .Select(p => new PhoneAssignmentDto
+        //    {
+        //        PhoneNumber = p.PhoneNumber,
+        //        ShiftType = p.ShiftType,
+        //        AssignedStaffName = p.CaregiverName
+        //    })
+        //    .ToListAsync(cancellationToken);
+
+
+        // Use DTO instead of view, join PhoneAssignments with Users to get caregiver name
+        return await _dbContext.PhoneAssignments
             .Where(p => p.ShiftType == shiftType)
             .Select(p => new PhoneAssignmentDto
             {
                 PhoneNumber = p.PhoneNumber,
                 ShiftType = p.ShiftType,
-                AssignedStaffName = p.CaregiverName
+                AssignedStaffName = _dbContext.Users
+                    .Where(u => u.Id == p.CaregiverId)
+                    .Select(u => u.UserName)
+                    .FirstOrDefault() ?? string.Empty
             })
             .ToListAsync(cancellationToken);
     }
