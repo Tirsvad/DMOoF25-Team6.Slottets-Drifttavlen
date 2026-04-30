@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Team6. All rights reserved.
 // No warranty, explicit or implicit, provided.
 
+using System.ComponentModel.DataAnnotations.Schema;
+
+using Domain.Entities;
+
 namespace Infrastructure.Data.Persistent.Views;
 
 /// <summary>
@@ -13,6 +17,7 @@ public sealed class PhoneAssignmentView
     public Guid Id { get; init; }
     public string PhoneNumber { get; init; } = string.Empty;
     public string ShiftType { get; init; } = string.Empty;
-    public Guid CaregiverId { get; init; }
-    public string CaregiverName { get; init; } = string.Empty;
+    [ForeignKey(nameof(Employee))]
+    public Guid EmployeeId { get; init; }
+    public string EmployeeName { get; init; } = string.Empty;
 }

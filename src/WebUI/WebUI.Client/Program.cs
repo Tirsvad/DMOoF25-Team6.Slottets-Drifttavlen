@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
-using Core;
+using Infrastructure;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -15,7 +15,7 @@ internal class Program
     private static async Task Main(string[] args)
     {
         WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
-        _ = builder.Services.AddCore();
+        _ = builder.Services.AddInfrastructure(builder.Configuration);
         _ = builder.Services.AddScoped<TokenStorageService>();
         _ = builder.Services.AddScoped<AuthService>();
         _ = builder.Services.AddAuthorizationCore();
