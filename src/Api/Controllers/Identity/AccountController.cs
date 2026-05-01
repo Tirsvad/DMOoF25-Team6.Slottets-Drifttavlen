@@ -12,6 +12,7 @@ using Core.Mappers.Accounts;
 
 using Domain.Entities;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -28,14 +29,8 @@ namespace Api.Controllers.Identity;
 [ApiController]
 public class AccountController(UserManager<User> userManager, IRefreshTokenStore refreshTokenStore) : ControllerBase
 {
-    /// <summary>
-    /// Registers a new user Account.
-    /// </summary>
-    /// <param name="request">A registration request containing user details and password.</param>
-    /// <returns>An <see cref="IActionResult"/> indicating the result of the registration operation.</returns>
-    /// <response code="200">Registration succeeded.</response>
-    /// <response code="400">Registration failed due to validation errors or duplicate user.</response>
     [HttpPost("register")]
+    [Authorize(Roles = "admin,superuser")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
         if (!ModelState.IsValid)
@@ -53,6 +48,24 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             });
     }
 
+    [HttpDelete("delete")]
+    [Authorize(Roles = "admin,superuser")]
+    public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserRequestDto request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        User? user = await GetValidUserByIdAsync(request.UserId);
+        if (user == null)
+        {
+            return NotFound(new DeleteUserResponseDto { ErrorMessages = ["User not found."] });
+        }
+
+        _ = await userManager.DeleteAsync(user);
+        return Ok(new DeleteUserResponseDto { IsSuccessful = true });
+    }
 
     /// <summary>
     /// Authenticates a user and returns a JWT access token and refresh token.
