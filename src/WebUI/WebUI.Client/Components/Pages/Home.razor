@@ -28,14 +28,6 @@
 
       <button @onclick="Logout">Logout</button>
     }
-    else
-    {
-      <p>You are not logged in.</p>
-      @if (isInteractive)
-      {
-        <button @onclick="Login">Login</button>
-      }
-    }
   </Authorized>
   <NotAuthorized>
     @if (isInteractive)
@@ -44,7 +36,9 @@
     }
     else
     {
-      <span>Loading...</span>
+      <span>
+        <LoadingSpinner />
+      </span>
     }
   </NotAuthorized>
 </AuthorizeView>

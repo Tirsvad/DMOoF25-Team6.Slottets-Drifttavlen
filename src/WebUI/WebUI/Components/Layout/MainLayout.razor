@@ -1,12 +1,24 @@
 @inherits LayoutComponentBase
 
-@Body
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+<div class="d-flex flex-column min-vh-100">
+  <header class="navbar navbar-expand-lg navbar-light bg-light">
+  </header>
+
+  <main class="container mt-4 flex-fill">
+    @Body
+
+    <div id="blazor-error-ui">
+      An unhandled error has occurred.
+      <a href="" class="reload">Reload</a>
+      <a class="dismiss">🗙</a>
+    </div>
+
+    <!-- Browser Refresh script for development hot reload -->
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+  </main>
+
+  <footer class="footer bg-light text-center py-3 mt-auto">
+    &copy; 2026 - Team6
+  </footer>
 </div>
-
-<!-- Browser Refresh script for development hot reload -->
-<script src="/_framework/aspnetcore-browser-refresh.js"></script>
