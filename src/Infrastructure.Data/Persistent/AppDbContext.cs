@@ -55,6 +55,7 @@ public partial class AppDbContext(DbContextOptions<AppDbContext> options) : Iden
         // RolesClaimSeed Identity roles and claims
         IdentitySeed.UserSeed(modelBuilder);
         IdentitySeed.RolesClaimSeed(modelBuilder);
+        IdentitySeed.UserRoleSeed(modelBuilder);
 
     }
 }

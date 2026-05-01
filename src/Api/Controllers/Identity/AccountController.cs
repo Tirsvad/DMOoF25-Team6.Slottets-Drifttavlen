@@ -42,7 +42,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
     /// <response code="400">Registration failed due to validation errors or duplicate user.</response>
     /// <response code="401">The user is not authorized to perform this action.</response>
     [HttpPost("register")]
-    [Authorize(Roles = "admin,superuser")]
+    [Authorize(Roles = "Admin,SuperUser")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
         if (!ModelState.IsValid)
@@ -117,7 +117,8 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             return Unauthorized(new LoginResponseDto { ErrorMessages = ["Invalid email or password."] });
         }
 
-        string token = GenerateJwtToken();
+        IList<string> roles = await userManager.GetRolesAsync(user);
+        string token = GenerateJwtToken(user, roles);
         string refreshTokenValue = GenerateRefreshToken();
         string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         RefreshToken refreshToken = new()
@@ -172,7 +173,8 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             return Unauthorized(new RefreshTokenResponseDto { ErrorMessages = ["User not found or email unavailable."] });
         }
 
-        string token = GenerateJwtToken();
+        IList<string> roles = await userManager.GetRolesAsync(user);
+        string token = GenerateJwtToken(user, roles);
         string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         RefreshToken newRefreshToken = new()
         {
@@ -233,23 +235,30 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
 
     #region Helper Methods
     /// <summary>
-    /// Generates a new JWT access token.
+    /// Generates a new JWT access token including user roles.
     /// </summary>
+    /// <param name="user">The user for whom the token is generated.</param>
+    /// <param name="roles">The roles assigned to the user.</param>
     /// <remarks>
     /// Uses environment variables for signing key, issuer, and audience. Throws if signing key is not found.
     /// </remarks>
     /// <returns>A JWT access token as a string.</returns>
     /// <exception cref="InvalidOperationException">IssuerSigningKey not found in environment variables.</exception>
-    private static string GenerateJwtToken()
+    private static string GenerateJwtToken(User user, IEnumerable<string> roles)
     {
         string key = Environment.GetEnvironmentVariable("TokenValidationParameters__IssuerSigningKey") ?? throw new InvalidOperationException("IssuerSigningKey not found in environment variables.");
         SymmetricSecurityKey secretKey = new(Encoding.UTF8.GetBytes(key));
         SigningCredentials signingCredentials = new(secretKey, SecurityAlgorithms.HmacSha256);
 
-        Claim[] claims =
-        [
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        ];
+        List<Claim> claims = new()
+        {
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty)
+        };
+
+        // Add role claims
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         JwtSecurityToken tokenOptions = new(
             issuer: Environment.GetEnvironmentVariable("TokenValidationParameters__Issuer"),

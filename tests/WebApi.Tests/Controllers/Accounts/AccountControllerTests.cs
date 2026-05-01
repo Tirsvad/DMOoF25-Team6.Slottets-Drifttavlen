@@ -15,6 +15,35 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     #region Functionality Tests
 
     [Fact]
+    [Trait("Category", "Integration")]
+    [Trait("Flow", "AdminLoginThenRegister")]
+    public async Task AdminLogin_ThenRegisterTestUser_Succeeds()
+    {
+        // Arrange: Login as admin
+        var adminLogin = new LoginRequestDto { Email = "PederRasmussen@example.com", Password = "Password123!" };
+        var loginResponse = await _client.PostAsJsonAsync("/Account/login", adminLogin, cancellationToken: TestContext.Current.CancellationToken);
+        loginResponse.EnsureSuccessStatusCode();
+        var loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
+        Assert.NotNull(loginContent);
+        Assert.False(string.IsNullOrWhiteSpace(loginContent.JwtToken));
+
+        // Act: Register a test user with admin's JWT
+        var testUserEmail = $"integrationtestuser_{Guid.NewGuid()}@example.com";
+        var registerRequest = new RegisterRequestDto { Email = testUserEmail, Password = "Password123!" };
+        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/Account/register")
+        {
+            Content = JsonContent.Create(registerRequest)
+        };
+        requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginContent.JwtToken);
+        var registerResponse = await _client.SendAsync(requestMessage, TestContext.Current.CancellationToken);
+
+        // Assert
+        registerResponse.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+    }
+
+
+    [Fact]
     [Trait("Category", "Functionality")]
     [Trait("Endpoint", "Register")]
     public async Task Register_ValidRequest_ReturnsOk()

@@ -18,7 +18,7 @@ namespace WebUI;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         // Ensure DataProtection-Keys directory exists for key persistence
         string dataProtectionKeysDir = Path.Combine(AppContext.BaseDirectory, "DataProtection-Keys");

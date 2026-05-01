@@ -150,6 +150,17 @@ public static class IdentitySeed
             adminClaim1,
             superUserClaim1);
     }
+    public static void UserRoleSeed(ModelBuilder modelBuilder)
+    {
+        // Assign admin user to Admin role
+        modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
+            new IdentityUserRole<Guid>
+            {
+                UserId = adminUser.Id,
+                RoleId = adminRole.Id
+            }
+        );
+    }
     public static string PasswordHash(User user, string password)
     {
         PasswordHasher<User> passwordHasher = new();
