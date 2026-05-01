@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
+using Core.DTOs;
 using Core.DTOs.Identity;
 using Core.Interfaces.Services;
 using Core.Mappers.Accounts;
@@ -29,6 +30,17 @@ namespace Api.Controllers.Identity;
 [ApiController]
 public class AccountController(UserManager<User> userManager, IRefreshTokenStore refreshTokenStore) : ControllerBase
 {
+    /// <summary>
+    /// Registers a new user Account.
+    /// </summary>
+    /// <param name="request">A registration request containing user details and password.</param>
+    /// <returns>An <see cref="IActionResult"/> indicating the result of the registration operation.</returns>
+    /// <remarks>
+    /// Only users with the <c>admin</c> or <c>superuser</c> role are authorized to access this endpoint.
+    /// </remarks>
+    /// <response code="200">Registration succeeded.</response>
+    /// <response code="400">Registration failed due to validation errors or duplicate user.</response>
+    /// <response code="401">The user is not authorized to perform this action.</response>
     [HttpPost("register")]
     [Authorize(Roles = "admin,superuser")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
@@ -48,6 +60,18 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             });
     }
 
+    /// <summary>
+    /// Deletes a user account by user ID.
+    /// </summary>
+    /// <param name="request">A request containing the user ID to delete.</param>
+    /// <returns>An <see cref="IActionResult"/> indicating the result of the delete operation.</returns>
+    /// <remarks>
+    /// Only users with the <c>admin</c> or <c>superuser</c> role are authorized to access this endpoint. This endpoint is intended for testing purposes and should be protected or removed in production environments.
+    /// </remarks>
+    /// <response code="200">User deletion succeeded.</response>
+    /// <response code="400">Request failed due to validation errors.</response>
+    /// <response code="401">The user is not authorized to perform this action.</response>
+    /// <response code="404">User not found.</response>
     [HttpDelete("delete")]
     [Authorize(Roles = "admin,superuser")]
     public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserRequestDto request)
@@ -57,7 +81,12 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             return BadRequest(ModelState);
         }
 
-        User? user = await GetValidUserByIdAsync(request.UserId);
+        if (!Guid.TryParse(request.UserId, out Guid userId))
+        {
+            return BadRequest(new DeleteUserResponseDto { ErrorMessages = ["Invalid user ID format."] });
+        }
+
+        User? user = await GetValidUserByIdAsync(userId);
         if (user == null)
         {
             return NotFound(new DeleteUserResponseDto { ErrorMessages = ["User not found."] });
