@@ -21,8 +21,9 @@ public partial class MedicineStatus
     #endregion
 
     #region Lifecycle
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
+        return Task.CompletedTask;
     }
     #endregion
 
