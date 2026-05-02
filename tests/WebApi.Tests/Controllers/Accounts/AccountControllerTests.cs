@@ -3,8 +3,10 @@
 
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 using Core.DTOs.Identity;
+using Core.Interfaces.Dto.Identity;
 
 namespace WebApi.Tests.Controllers.Accounts;
 
@@ -13,6 +15,39 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     private readonly HttpClient _client = factory.CreateClient();
 
     #region Functionality Tests
+
+    [Fact]
+    [Trait("Category", "Functionality")]
+    [Trait("Endpoint", "Delete")]
+    public async Task DeleteUserAsync_ValidUser_ReturnsOkAndDeletesUser()
+    {
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
+
+        // Arrange: Register a new user to be deleted
+        string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
+
+        GetUserIdByEmailRequestDto content = new() { Email = uniqueEmail };
+
+        // Act: Find the user ID by email (using test helper)
+        // If GetUserIdByEmailAsync returns a JSON string:
+        string userIdJson = await GetUserIdByEmailAsync(content, _client, adminLoginContent.Token);
+        string? userId = JsonDocument.Parse(userIdJson).RootElement.GetProperty("userId").GetString();
+        Assert.NotNull(userId);
+
+        // Act: Call delete endpoint as admin
+        HttpRequestMessage deleteRequestMessage = new(HttpMethod.Delete, $"/Account/delete/{userId}");
+        deleteRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminLoginContent.Token);
+        // No Content for DELETE
+        HttpResponseMessage deleteResponse = await _client.SendAsync(deleteRequestMessage, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+        DeleteUserResponseDto? deleteContent = await deleteResponse.Content.ReadFromJsonAsync<DeleteUserResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
+        Assert.NotNull(deleteContent);
+        Assert.True(deleteContent!.IsSuccessful);
+    }
 
     [Fact]
     [Trait("Category", "Functionality")]
@@ -343,6 +378,18 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         return registerResponse;
     }
 
-
+    public static async Task<string> GetUserIdByEmailAsync(GetUserIdByEmailRequestDto content, HttpClient client, string adminToken)
+    {
+        // Use POST to avoid sending email in clear text in the URL.
+        HttpRequestMessage request = new(HttpMethod.Post, "/Account/get-id-by-email")
+        {
+            Content = JsonContent.Create(content)
+        };
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminToken);
+        HttpResponseMessage response = await client.SendAsync(request);
+        _ = response.EnsureSuccessStatusCode();
+        string userId = await response.Content.ReadAsStringAsync();
+        return userId.Trim('"'); // Remove quotes if returned as JSON string
+    }
     #endregion
 }

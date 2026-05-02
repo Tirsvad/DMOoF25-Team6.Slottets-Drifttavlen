@@ -4,7 +4,7 @@
 using System.Net.Http.Json;
 
 using Core.DTOs.Identity;
-using Core.Interfaces.Dto;
+using Core.Interfaces.Dto.Identity;
 using Core.Interfaces.Managers;
 
 namespace Infrastructure.Managers;

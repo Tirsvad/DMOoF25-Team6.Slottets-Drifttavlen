@@ -2,7 +2,7 @@
 //  No warranty, explicit or implicit, provided.
 
 using Core.DTOs.Identity;
-using Core.Interfaces.Dto;
+using Core.Interfaces.Dto.Identity;
 
 namespace Core.Interfaces.Managers;
 

@@ -3,9 +3,8 @@
 
 using System.Security.Cryptography;
 
-using Core.DTOs;
 using Core.DTOs.Identity;
-using Core.Interfaces.Dto;
+using Core.Interfaces.Dto.Identity;
 using Core.Interfaces.Services;
 using Core.Mappers.Accounts;
 
@@ -88,29 +87,38 @@ public class AccountController(
     /// <response code="400">Request failed due to validation errors.</response>
     /// <response code="401">The user is not authorized to perform this action.</response>
     /// <response code="404">User not found.</response>
-    [HttpDelete("delete")]
+    [HttpDelete("delete/{userId}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserRequestDto request)
+    public async Task<IActionResult> DeleteUserAsync(string userId)
+    {
+        if (!Guid.TryParse(userId, out Guid parsedUserId))
+        {
+            return BadRequest(new ErrorDto { ErrorMessages = ["Invalid user ID format."] });
+        }
+
+        User? user = await GetValidUserByIdAsync(parsedUserId);
+        if (user == null)
+        {
+            return NotFound(new ErrorDto { ErrorMessages = ["User not found."] });
+        }
+
+        _ = await userManager.DeleteAsync(user);
+        return Ok(new DeleteUserResponseDto { IsSuccessful = true });
+    }
+
+    [HttpPost("get-id-by-email")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GetUserIdByEmailAsync([FromBody] GetUserIdByEmailRequestDto content)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        if (!Guid.TryParse(request.UserId, out Guid userId))
-        {
-            return BadRequest(new DeleteUserResponseDto { ErrorMessages = ["Invalid user ID format."] });
-        }
-
-        User? user = await GetValidUserByIdAsync(userId);
-        if (user == null)
-        {
-            return NotFound(new DeleteUserResponseDto { ErrorMessages = ["User not found."] });
-        }
-
-        _ = await userManager.DeleteAsync(user);
-        return Ok(new DeleteUserResponseDto { IsSuccessful = true });
+        User? result = await userManager.FindByEmailAsync(content.Email);
+        return result == null ? NotFound(new ErrorDto { ErrorMessages = ["User not found."] }) : Ok(new { UserId = result.Id });
     }
+
 
     /// <summary>
     /// Authenticates a user and returns a JWT access token and refresh token.

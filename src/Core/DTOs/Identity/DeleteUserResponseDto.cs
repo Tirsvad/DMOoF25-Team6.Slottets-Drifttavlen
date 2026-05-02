@@ -5,7 +5,7 @@ using Core.Interfaces.Dto.Identity;
 
 namespace Core.DTOs.Identity;
 
-public class ErrorDto : ILoginResult, ILogoutResult, IDeleteResult
+public class DeleteUserResponseDto : IDeleteResult
 {
-    public IEnumerable<string>? ErrorMessages { get; set; }
+    public bool IsSuccessful { get; set; } = true;
 }
