@@ -17,15 +17,17 @@ namespace Infrastructure.Managers;
 /// </remarks>
 public class AccountManager : IAccountManager
 {
+    #region Fields
     private readonly HttpClient _httpClient;
     private readonly IHttpClientFactory? _httpClientFactory;
-
+    #endregion
     public AccountManager(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _httpClient = _httpClientFactory.CreateClient("SlottetApi") ?? throw new InvalidOperationException("Failed to create HttpClient.");
     }
 
+    #region Methods
     /// <summary>
     /// Creates a new user Account by sending registration data to the backend API.
     /// </summary>
@@ -144,4 +146,5 @@ public class AccountManager : IAccountManager
             ErrorMessages = ["Failed to parse refresh token response."]
         };
     }
+    #endregion
 }
