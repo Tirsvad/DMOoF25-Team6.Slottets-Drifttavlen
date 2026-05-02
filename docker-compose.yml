@@ -2,6 +2,11 @@ services:
   slottets-sqlserver:
     image: mysql
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - "3307:3306"
     volumes:
@@ -76,7 +81,7 @@ services:
       target: webapi-final-stage
     depends_on:
       slottets-sqlserver:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -105,7 +110,7 @@ services:
       target: webui-final-stage
     depends_on:
       slottets-sqlserver:
-        condition: service_started
+        condition: service_healthy
       webapi-final-stage:
         condition: service_started
     environment:
