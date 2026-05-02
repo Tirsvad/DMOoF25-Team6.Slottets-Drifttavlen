@@ -95,10 +95,13 @@ public class AccountServiceTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        LoginResponseDto result = await _service.LoginAsync(request);
+        var result = await _service.LoginAsync(request);
+        var loginResponse = Assert.IsType<LoginResponseDto>(result);
 
         // Assert
-        Assert.Equal(expectedResponse, result);
+        Assert.Equal(expectedResponse.Token, loginResponse.Token);
+        Assert.Equal(expectedResponse.Email, loginResponse.Email);
+        Assert.Equal(expectedResponse.ExpiresAt, loginResponse.ExpiresAt);
         _AccountManagerMock.Verify(m => m.LoginAsync(request), Times.Once);
     }
 }

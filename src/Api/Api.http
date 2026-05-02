@@ -9,7 +9,6 @@ Content-Type: application/json
     "email": "PederRasmussen@example.com",
     "password": "Password123!"
 }
-@admin_accessToken = {{response.body.jwtToken}}
 
 
 ### Identity Register user (Admin role is assigned by default)

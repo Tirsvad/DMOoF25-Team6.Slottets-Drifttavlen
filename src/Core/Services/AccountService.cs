@@ -2,6 +2,7 @@
 //  No warranty, explicit or implicit, provided.
 
 using Core.DTOs.Identity;
+using Core.Interfaces.Dto;
 using Core.Interfaces.Managers;
 using Core.Interfaces.Services;
 
@@ -31,8 +32,8 @@ public class AccountService(IAccountManager AccountManager) : IAccountService
     /// Authenticates a user and returns a login response.
     /// </summary>
     /// <param name="loginRequestDto">A login request DTO containing user credentials.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="LoginResponseDto"/>.</returns>
-    public Task<LoginResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
+    /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="ILoginResult"/>.</returns>
+    public Task<ILoginResult> LoginAsync(LoginRequestDto loginRequestDto)
     {
         return _AccountManager.LoginAsync(loginRequestDto);
     }
@@ -55,5 +56,20 @@ public class AccountService(IAccountManager AccountManager) : IAccountService
     public Task<RefreshTokenResponseDto> RefreshTokenAsync(RefreshTokenRequestDto refreshTokenRequestDto)
     {
         return _AccountManager.RefreshTokenAsync(refreshTokenRequestDto);
+    }
+
+    async Task<ILoginResult> IAccountService.LoginAsync(LoginRequestDto loginRequestDto)
+    {
+        ILoginResult result = await _AccountManager.LoginAsync(loginRequestDto);
+        if (result is LoginResponseDto loginResponse)
+        {
+            return loginResponse;
+        }
+        // If result is an error, map to LoginResponseDto with empty/null tokens and error info if needed
+        return new ErrorDto
+        {
+            ErrorMessages = ["Login failed"]
+            // You can include additional error details here if needed
+        };
     }
 }

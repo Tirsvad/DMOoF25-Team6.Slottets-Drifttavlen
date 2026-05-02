@@ -152,8 +152,25 @@ public class AccountManager : IAccountManager
         throw new NotImplementedException();
     }
 
-    Task<LoginResponseDto> IAccountManager.LoginAsync(LoginRequestDto loginRequestDto)
+    async Task<ILoginResult> IAccountManager.LoginAsync(LoginRequestDto loginRequestDto)
     {
-        throw new NotImplementedException();
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/login", loginRequestDto);
+        try
+        {
+            LoginResponseDto? loginResponseDto = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+            return loginResponseDto != null
+                ? loginResponseDto
+                : new ErrorDto
+                {
+                    ErrorMessages = ["Failed to parse login response."]
+                };
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return new ErrorDto
+            {
+                ErrorMessages = ["Failed to parse login response."]
+            };
+        }
     }
 }

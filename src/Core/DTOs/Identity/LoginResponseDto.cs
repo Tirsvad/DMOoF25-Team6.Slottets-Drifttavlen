@@ -31,12 +31,4 @@ public class LoginResponseDto : ILoginResult
     /// A string containing the refresh token. The value can be <see langword="null"/> if authentication failed.
     /// </value>
     public string? RefreshToken { get; set; }
-
-    /// <summary>
-    /// Gets or sets the collection of error messages returned from the authentication service.
-    /// </summary>
-    /// <value>
-    /// A collection of error messages. The value can be <see langword="null"/> if there are no errors.
-    /// </value>
-    public IEnumerable<string>? ErrorMessages { get; set; }
 }
