@@ -86,8 +86,8 @@ services:
       - MYSQL_PORT=3306
     ports:
       - "5051:5051"
-    expose:
-      - 5051
+#    expose:
+#      - 5051
     networks:
       vlan-db:
       vlan-web:
