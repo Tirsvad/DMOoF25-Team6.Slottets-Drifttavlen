@@ -39,7 +39,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         _ = builder.ConfigureServices(services =>
         {
             _ = services.AddScoped<IPhoneAssignmentService, MockPhoneAssignmentService>();
-                // Register MockTokenService for ITokenService
+                // CreateAccountAsync MockTokenService for ITokenService
                 _ = services.AddScoped<ITokenService, WebApi.Tests.Mocks.MockTokenService>();
 
             // Override authentication for integration tests

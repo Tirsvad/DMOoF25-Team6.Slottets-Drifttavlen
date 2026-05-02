@@ -57,7 +57,7 @@ public class Program
         ConfigurationManager conf = builder.Configuration;
         string connectionString = ConfigureDbContext(builder, conf)
             ?? throw new InvalidOperationException("DB_CONNECTION_STRING environment variable is not set.");
-        // Register both DbContext and DbContextFactory for DI
+        // CreateAccountAsync both DbContext and DbContextFactory for DI
         _ = builder.Services.AddDbContext<AppDbContext>(options =>
         {
             _ = options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

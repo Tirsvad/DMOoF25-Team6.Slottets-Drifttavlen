@@ -36,7 +36,7 @@ public static class DependencyInjection
             client.BaseAddress = new Uri(apiBaseUrl.EndsWith('/') ? apiBaseUrl : apiBaseUrl + "/");
         });
 
-        // Register managers that contain business logic and coordinate between repositories and services
+        // CreateAccountAsync managers that contain business logic and coordinate between repositories and services
         _ = services.AddScoped<IResidentManager, ResidentManager>();
         _ = services.AddScoped<IAccountManager, AccountManager>();
         _ = services.AddScoped<IPhoneAssignmentManager, PhoneAssignmentManager>();
@@ -46,7 +46,7 @@ public static class DependencyInjection
         // Audit service for logging actions, errors, and important events to the database
         _ = services.AddScoped<IAuditService, AuditService>();
 
-        // Register TokenService for ITokenService
+        // CreateAccountAsync TokenService for ITokenService
         _ = services.AddScoped<ITokenService, TokenService>();
 
         return services;

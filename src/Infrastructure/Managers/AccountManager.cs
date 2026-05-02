@@ -17,15 +17,17 @@ namespace Infrastructure.Managers;
 /// </remarks>
 public class AccountManager : IAccountManager
 {
+    #region Fields
     private readonly HttpClient _httpClient;
     private readonly IHttpClientFactory? _httpClientFactory;
-
+    #endregion
     public AccountManager(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _httpClient = _httpClientFactory.CreateClient("SlottetApi") ?? throw new InvalidOperationException("Failed to create HttpClient.");
     }
 
+    #region Methods
     /// <summary>
     /// Creates a new user Account by sending registration data to the backend API.
     /// </summary>
@@ -34,7 +36,7 @@ public class AccountManager : IAccountManager
     /// <remarks>
     /// Returns a failed response if the backend response cannot be parsed.
     /// </remarks>
-    public async Task<RegistrationResponseDto> Register(RegisterRequestDto registrationRequestDto)
+    public async Task<RegistrationResponseDto> CreateAccountAsync(RegisterRequestDto registrationRequestDto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/register", registrationRequestDto);
         try
@@ -144,36 +146,5 @@ public class AccountManager : IAccountManager
             ErrorMessages = ["Failed to parse refresh token response."]
         };
     }
-
-    public Task<RegistrationResponseDto> CreateAccountAsync(RegisterRequestDto registrationRequestDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    async Task<ILoginResult> IAccountManager.LoginAsync(LoginRequestDto loginRequestDto)
-    {
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/login", loginRequestDto);
-        try
-        {
-            LoginResponseDto? loginResponseDto = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
-            return loginResponseDto != null
-                ? loginResponseDto
-                : new ErrorDto
-                {
-                    ErrorMessages = ["Failed to parse login response."]
-                };
-        }
-        catch (System.Text.Json.JsonException)
-        {
-            return new ErrorDto
-            {
-                ErrorMessages = ["Failed to parse login response."]
-            };
-        }
-    }
-
-    Task<ILogoutResult> IAccountManager.LogoutAsync(LogoutRequestDto logoutRequestDto)
-    {
-        throw new NotImplementedException();
-    }
+    #endregion
 }
