@@ -1,13 +1,11 @@
 // Copyright (c) 2026 Team6. All rights reserved. 
 //  No warranty, explicit or implicit, provided.
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 
 using Core.DTOs;
 using Core.DTOs.Identity;
+using Core.Interfaces.Dto;
 using Core.Interfaces.Services;
 using Core.Mappers.Accounts;
 
@@ -16,7 +14,6 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Controllers.Identity;
 
@@ -28,8 +25,14 @@ namespace Api.Controllers.Identity;
 /// </remarks>
 [Route("[controller]")]
 [ApiController]
-public class AccountController(UserManager<User> userManager, IRefreshTokenStore refreshTokenStore) : ControllerBase
+public class AccountController(
+    UserManager<User> userManager,
+    IRefreshTokenStore refreshTokenStore,
+    //SignInManager<User> signInManager,
+    ITokenService tokenService,
+    IConfiguration config) : ControllerBase
 {
+
     /// <summary>
     /// Registers a new user Account.
     /// </summary>
@@ -42,14 +45,27 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
     /// <response code="400">Registration failed due to validation errors or duplicate user.</response>
     /// <response code="401">The user is not authorized to perform this action.</response>
     [HttpPost("register")]
-    [Authorize(Roles = "Admin,SuperUser")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
+
+        User? existing = await userManager.FindByEmailAsync(request.Email);
+        if (existing != null)
+        {
+            return BadRequest(new RegistrationResponseDto
+            {
+                IsSuccessful = false,
+                ErrorMessages = ["Email er allerede i brug."]
+            });
+        }
+
+        // Map the registration request to a User entity
         User user = RegistrationMapper.ToUserEntity(request);
+
         IdentityResult result = await userManager.CreateAsync(user, request.Password);
         return result.Succeeded
             ? Ok(new RegistrationResponseDto { IsSuccessful = true })
@@ -73,7 +89,7 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
     /// <response code="401">The user is not authorized to perform this action.</response>
     /// <response code="404">User not found.</response>
     [HttpDelete("delete")]
-    [Authorize(Roles = "admin,superuser")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserRequestDto request)
     {
         if (!ModelState.IsValid)
@@ -110,34 +126,40 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
         {
             return errorResult;
         }
+        // Explicitly check for empty or null password
+        if (string.IsNullOrWhiteSpace(request.Password))
+        {
+            return BadRequest(new ErrorDto { ErrorMessages = ["Password is required."] });
+        }
 
         User? user = await FindValidUserAsync(request.Email, request.Password);
         if (user == null)
         {
-            return Unauthorized(new LoginResponseDto { ErrorMessages = ["Invalid email or password."] });
+            return Unauthorized(new ErrorDto { ErrorMessages = ["Ugyldig e-mail eller adgangskode."] });
         }
 
-        IList<string> roles = await userManager.GetRolesAsync(user);
-        string token = GenerateJwtToken(user, roles);
-        string refreshTokenValue = GenerateRefreshToken();
-        string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-        RefreshToken refreshToken = new()
+        ILoginResult loginResult = await GenerateJwtTokenAsync(user);
+        if (loginResult is ErrorDto errorDto)
         {
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Token = refreshTokenValue,
-            CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedByIp = ipAddress
-        };
+            return Unauthorized(errorDto);
+        }
 
-        await refreshTokenStore.SaveAsync(refreshToken);
+        //string token = ((LoginResponseDto)loginResult).Token;
+        //string refreshTokenValue = GenerateRefreshToken();
+        //string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        //RefreshToken refreshToken = new()
+        //{
+        //    Id = Guid.NewGuid(),
+        //    UserId = user.Id,
+        //    Token = refreshTokenValue,
+        //    CreatedAt = DateTime.UtcNow,
+        //    ExpiresAt = DateTime.UtcNow.AddH(7),
+        //    CreatedByIp = ipAddress
+        //};
 
-        return Ok(new LoginResponseDto
-        {
-            JwtToken = token,
-            RefreshToken = refreshTokenValue
-        });
+        //await refreshTokenStore.SaveAsync(refreshToken);
+
+        return Ok(loginResult);
     }
 
     /// <summary>
@@ -173,8 +195,13 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
             return Unauthorized(new RefreshTokenResponseDto { ErrorMessages = ["User not found or email unavailable."] });
         }
 
-        IList<string> roles = await userManager.GetRolesAsync(user);
-        string token = GenerateJwtToken(user, roles);
+        ILoginResult loginResult = await GenerateJwtTokenAsync(user);
+        if (loginResult is ErrorDto errorDto)
+        {
+            return Unauthorized(errorDto);
+        }
+
+        _ = ((LoginResponseDto)loginResult).Token;
         string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         RefreshToken newRefreshToken = new()
         {
@@ -187,11 +214,9 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
         };
         await refreshTokenStore.SaveAsync(newRefreshToken);
 
-        return Ok(new RefreshTokenResponseDto
-        {
-            JwtToken = token,
-            RefreshToken = newRefreshToken.Token
-        });
+        LoginResponseDto loginResponse = (LoginResponseDto)loginResult;
+        loginResponse.RefreshToken = newRefreshToken.Token;
+        return Ok(loginResponse);
     }
 
     /// <summary>
@@ -235,40 +260,75 @@ public class AccountController(UserManager<User> userManager, IRefreshTokenStore
 
     #region Helper Methods
     /// <summary>
-    /// Generates a new JWT access token including user roles.
+    /// Generates a new JWT access token.
     /// </summary>
-    /// <param name="user">The user for whom the token is generated.</param>
-    /// <param name="roles">The roles assigned to the user.</param>
     /// <remarks>
     /// Uses environment variables for signing key, issuer, and audience. Throws if signing key is not found.
     /// </remarks>
     /// <returns>A JWT access token as a string.</returns>
     /// <exception cref="InvalidOperationException">IssuerSigningKey not found in environment variables.</exception>
-    private static string GenerateJwtToken(User user, IEnumerable<string> roles)
+    private async Task<ILoginResult> GenerateJwtTokenAsync(User user)
     {
-        string key = Environment.GetEnvironmentVariable("TokenValidationParameters__IssuerSigningKey") ?? throw new InvalidOperationException("IssuerSigningKey not found in environment variables.");
-        SymmetricSecurityKey secretKey = new(Encoding.UTF8.GetBytes(key));
-        SigningCredentials signingCredentials = new(secretKey, SecurityAlgorithms.HmacSha256);
-
-        List<Claim> claims = new()
+        bool error = false;
+        IEnumerable<string> errorMsg = [];
+        IList<string> roles = await userManager.GetRolesAsync(user);
+        string token = tokenService.GenerateToken(user, roles);
+        if (string.IsNullOrWhiteSpace(token))
         {
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty)
+            error = true;
+            errorMsg = ["Failed to generate JWT token."];
+        }
+        int minuttesToExpire = int.Parse(config["TokenValidationParameters:TokenExpirationMinutes"] ?? "5");
+
+        if (error)
+        {
+            return new ErrorDto
+            {
+                ErrorMessages = errorMsg
+            };
+        }
+
+        // Generate a refresh token
+        string refreshTokenValue = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        string? ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        RefreshToken refreshToken = new()
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            Token = refreshTokenValue,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedByIp = ipAddress
         };
 
-        // Add role claims
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        await refreshTokenStore.SaveAsync(refreshToken);
 
-        JwtSecurityToken tokenOptions = new(
-            issuer: Environment.GetEnvironmentVariable("TokenValidationParameters__Issuer"),
-            audience: Environment.GetEnvironmentVariable("TokenValidationParameters__Audience"),
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(5),
-            signingCredentials: signingCredentials
-        );
+        LoginResponseDto loginResponse = new()
+        {
+            Token = token,
+            Email = user.Email ?? string.Empty,
+            ExpiresAt = DateTime.UtcNow.AddMinutes(minuttesToExpire),
+            RefreshToken = refreshTokenValue
+        };
+        return loginResponse;
+        //string key = Environment.GetEnvironmentVariable("TokenValidationParameters__IssuerSigningKey") ?? throw new InvalidOperationException("IssuerSigningKey not found in environment variables.");
+        //SymmetricSecurityKey secretKey = new(Encoding.UTF8.GetBytes(key));
+        //SigningCredentials signingCredentials = new(secretKey, SecurityAlgorithms.HmacSha256);
 
-        return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        //Claim[] claims =
+        //[
+        //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        //];
+
+        //JwtSecurityToken tokenOptions = new(
+        //    issuer: Environment.GetEnvironmentVariable("TokenValidationParameters__Issuer"),
+        //    audience: Environment.GetEnvironmentVariable("TokenValidationParameters__Audience"),
+        //    claims: claims,
+        //    expires: DateTime.Now.AddMinutes(5),
+        //    signingCredentials: signingCredentials
+        //);
+
+        //return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
     }
 
     // Helper: Validate ModelState

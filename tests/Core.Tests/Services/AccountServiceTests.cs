@@ -84,7 +84,12 @@ public class AccountServiceTests
     {
         // Arrange
         LoginRequestDto request = new() { Email = username, Password = password };
-        LoginResponseDto expectedResponse = new();
+        LoginResponseDto expectedResponse = new()
+        {
+            Token = "test-token",
+            Email = username,
+            ExpiresAt = DateTime.UtcNow.AddHours(1)
+        };
         _ = _AccountManagerMock
             .Setup(m => m.LoginAsync(request))
             .ReturnsAsync(expectedResponse);

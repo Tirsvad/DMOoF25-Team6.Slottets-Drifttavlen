@@ -7,6 +7,7 @@ using Core.Interfaces.Services;
 
 using Infrastructure.Managers;
 using Infrastructure.Services;
+using Core.Services;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,9 @@ public static class DependencyInjection
 
         // Audit service for logging actions, errors, and important events to the database
         _ = services.AddScoped<IAuditService, AuditService>();
+
+        // Register TokenService for ITokenService
+        _ = services.AddScoped<ITokenService, TokenService>();
 
         return services;
     }

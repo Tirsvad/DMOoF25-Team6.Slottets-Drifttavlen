@@ -1,10 +1,12 @@
 @* UC001 - Dashboard for all residents overview and status *@
 @*UC001 Task - Low Fi prototype for first iteration of prototype*@
 
+@layout DashboardLayout
 @page "/dashboard"
 @rendermode InteractiveServer
 @using Domain.Enums
 @using Domain.Entities
+@using WebUI.Components.Layout
 @using WebUI.Components.Residents
 @inject Core.Interfaces.Services.IResidentService ResidentService
 

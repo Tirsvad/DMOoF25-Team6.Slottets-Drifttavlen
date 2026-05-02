@@ -79,19 +79,19 @@ public static class IdentitySeed
     public static readonly IdentityRole<Guid> adminRole = new()
     {
         Id = Guid.Parse("fabc2277-7992-491b-ae4a-bc78f8de56aa"),
-        Name = "Admin",
+        Name = "admin",
         NormalizedName = "ADMIN"
     };
     public static readonly IdentityRole<Guid> superUserRole = new()
     {
         Id = Guid.Parse("d1c9e8b5-3f4a-4c2e-9a1b-5e6f7a8b9c0d"),
-        Name = "SuperUser",
+        Name = "superuser",
         NormalizedName = "SUPERUSER"
     };
     public static readonly IdentityRole<Guid> careTakerRole = new()
     {
         Id = Guid.Parse("ee697c76-947a-4fe2-8b14-40194c30bdae"),
-        Name = "User",
+        Name = "user",
         NormalizedName = "USER"
     };
 
@@ -153,7 +153,7 @@ public static class IdentitySeed
     public static void UserRoleSeed(ModelBuilder modelBuilder)
     {
         // Assign admin user to Admin role
-        modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
+        _ = modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
             new IdentityUserRole<Guid>
             {
                 UserId = adminUser.Id,

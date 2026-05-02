@@ -4,6 +4,7 @@
 using System.Net.Http.Json;
 
 using Core.DTOs.Identity;
+using Core.Interfaces.Dto;
 using Core.Interfaces.Managers;
 
 namespace Infrastructure.Managers;
@@ -64,26 +65,22 @@ public class AccountManager : IAccountManager
     /// <remarks>
     /// Returns a failed response if the backend response cannot be parsed.
     /// </remarks>
-    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
+    public async Task<ILoginResult> LoginAsync(LoginRequestDto loginRequestDto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/login", loginRequestDto);
         try
         {
             return await response.Content.ReadFromJsonAsync<LoginResponseDto>() is LoginResponseDto loginResponseDto
                 ? loginResponseDto
-                : new LoginResponseDto
+                : new ErrorDto
                 {
-                    JwtToken = null,
-                    RefreshToken = null,
                     ErrorMessages = ["Failed to parse login response."]
                 };
         }
         catch (System.Text.Json.JsonException)
         {
-            return new LoginResponseDto
+            return new ErrorDto
             {
-                JwtToken = null,
-                RefreshToken = null,
                 ErrorMessages = ["Failed to parse login response."]
             };
         }
@@ -151,6 +148,11 @@ public class AccountManager : IAccountManager
     }
 
     public Task<RegistrationResponseDto> CreateAccountAsync(RegisterRequestDto registrationRequestDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<LoginResponseDto> IAccountManager.LoginAsync(LoginRequestDto loginRequestDto)
     {
         throw new NotImplementedException();
     }

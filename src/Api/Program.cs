@@ -4,10 +4,12 @@
 
 // For SwaggerGen extension methods
 
+using System.Security.Claims;
 using System.Text;
 
 using Domain.Entities;
 
+using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Data.Persistent;
 
@@ -15,7 +17,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 namespace Api;
 
 
@@ -64,6 +65,7 @@ public class Program
 
         _ = builder.Services.AddAuthorization();
 
+        _ = builder.Services.AddInfrastructure(builder.Configuration);
         _ = builder.Services.AddInfrastructureData();
 
         ConfigureIdentity(builder);
@@ -81,9 +83,12 @@ public class Program
         WebApplication app = builder.Build();
 
         // Apply any pending migrations at startup
-        using IServiceScope scope = app.Services.CreateScope();
-        AppDbContext ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        ctx.Database.Migrate();
+        //using IServiceScope scope = app.Services.CreateScope();
+        //AppDbContext ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        //if (ctx.Database.IsRelational())
+        //{
+        //    ctx.Database.Migrate();
+        //}
 
         // Configure the HTTP request pipeline.
         //if (app.Environment.IsDevelopment())
@@ -130,6 +135,7 @@ public class Program
 
             opt.User.RequireUniqueEmail = true;
         })
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
     }
@@ -160,6 +166,7 @@ public class Program
                     ValidIssuer = issuer,
                     ValidAudience = audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                    RoleClaimType = ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero
                 };
             });

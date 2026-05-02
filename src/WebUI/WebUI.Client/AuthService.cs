@@ -27,9 +27,9 @@ public class AuthService(
     {
         LoginRequestDto userLogin = new() { Email = username, Password = password };
         LoginResponseDto result = await accountService.LoginAsync(userLogin);
-        if (result.JwtToken is not null)
+        if (result.Token is not null)
         {
-            await tokenStorageService.SetTokenAsync(result.JwtToken);
+            await tokenStorageService.SetTokenAsync(result.Token);
             (authenticationStateProvider as JwtAuthenticationStateProvider)?.NotifyAuthenticationStateChanged();
             return true;
         }

@@ -15,43 +15,27 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     #region Functionality Tests
 
     [Fact]
-    [Trait("Category", "Integration")]
-    [Trait("Flow", "AdminLoginThenRegister")]
-    public async Task AdminLogin_ThenRegisterTestUser_Succeeds()
-    {
-        // Arrange: Login as admin
-        var adminLogin = new LoginRequestDto { Email = "PederRasmussen@example.com", Password = "Password123!" };
-        var loginResponse = await _client.PostAsJsonAsync("/Account/login", adminLogin, cancellationToken: TestContext.Current.CancellationToken);
-        loginResponse.EnsureSuccessStatusCode();
-        var loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
-        Assert.NotNull(loginContent);
-        Assert.False(string.IsNullOrWhiteSpace(loginContent.JwtToken));
-
-        // Act: Register a test user with admin's JWT
-        var testUserEmail = $"integrationtestuser_{Guid.NewGuid()}@example.com";
-        var registerRequest = new RegisterRequestDto { Email = testUserEmail, Password = "Password123!" };
-        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/Account/register")
-        {
-            Content = JsonContent.Create(registerRequest)
-        };
-        requestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", loginContent.JwtToken);
-        var registerResponse = await _client.SendAsync(requestMessage, TestContext.Current.CancellationToken);
-
-        // Assert
-        registerResponse.EnsureSuccessStatusCode();
-        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
-    }
-
-
-    [Fact]
     [Trait("Category", "Functionality")]
     [Trait("Endpoint", "Register")]
     public async Task Register_ValidRequest_ReturnsOk()
     {
-        // Arrange
-        RegisterRequestDto request = new() { Email = "test@example.com", Password = "Password123!" };
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
+
+        // Arrange: Register and login to get a valid refresh token
+        _ = await RegisterUserAsAdminAsync(adminLoginContent);
+
+        // Arrange: Use a different unique email for the test registration
+        string testEmail = $"testlogin_{Guid.NewGuid()}@example.com";
+        RegisterRequestDto request = new() { Email = testEmail, Password = "Password123!" };
+        HttpRequestMessage registerRequestMessage = new(HttpMethod.Post, "/Account/register")
+        {
+            Content = JsonContent.Create(request)
+        };
+        registerRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminLoginContent.Token);
         // Act
-        HttpResponseMessage response = await _client.PostAsJsonAsync("/Account/register", request, cancellationToken: TestContext.Current.CancellationToken);
+        HttpResponseMessage response = await _client.SendAsync(registerRequestMessage, TestContext.Current.CancellationToken);
         // Assert
         _ = response.EnsureSuccessStatusCode();
         // Optionally assert response content
@@ -63,15 +47,17 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [Trait("Endpoint", "Logout")]
     public async Task Logout_ReturnsOk()
     {
-        // Arrange: Register a user
-        RegisterRequestDto request = new() { Email = "testlogout@example.com", Password = "Password123!" };
-        HttpResponseMessage registerResponse = await _client.PostAsJsonAsync("/Account/register", request, cancellationToken: TestContext.Current.CancellationToken);
-        _ = registerResponse.EnsureSuccessStatusCode();
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
 
-        // Login to get refresh token
-        LoginRequestDto loginRequest = new() { Email = request.Email, Password = request.Password };
+        // Arrange: Register and login to get a valid refresh token
+        string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
+
+        // Act: Attempt to login
+        LoginRequestDto loginRequest = new() { Email = uniqueEmail, Password = "Password123!" };
         HttpResponseMessage loginResponse = await _client.PostAsJsonAsync("/Account/login", loginRequest, cancellationToken: TestContext.Current.CancellationToken);
-        _ = loginResponse.EnsureSuccessStatusCode();
+
         LoginResponseDto? loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(loginContent);
         Assert.False(string.IsNullOrWhiteSpace(loginContent.RefreshToken));
@@ -95,11 +81,12 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [Trait("Endpoint", "Login")]
     public async Task Login_ValidCredentials_ReturnsOk()
     {
-        // Arrange: Register a user first
-        string uniqueEmail = $"testlogin_{Guid.NewGuid()}@example.com";
-        RegisterRequestDto registerRequest = new() { Email = uniqueEmail, Password = "Password123!" };
-        HttpResponseMessage registerResponse = await _client.PostAsJsonAsync("/Account/register", registerRequest, cancellationToken: TestContext.Current.CancellationToken);
-        _ = registerResponse.EnsureSuccessStatusCode();
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
+
+        // Arrange: Register and login to get a valid refresh token
+        string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Act: Attempt to login
         LoginRequestDto loginRequest = new() { Email = uniqueEmail, Password = "Password123!" };
@@ -109,20 +96,22 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         _ = loginResponse.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
     }
+
     [Fact]
     [Trait("Category", "Functionality")]
     [Trait("Endpoint", "Refresh")]
     public async Task Refresh_ValidToken_ReturnsOkAndNewTokens()
     {
-        // Arrange: Register and login to get a valid refresh token
-        string uniqueEmail = $"testrefresh_{Guid.NewGuid()}@example.com";
-        RegisterRequestDto registerRequest = new() { Email = uniqueEmail, Password = "Password123!" };
-        HttpResponseMessage registerResponse = await _client.PostAsJsonAsync("/Account/register", registerRequest, cancellationToken: TestContext.Current.CancellationToken);
-        _ = registerResponse.EnsureSuccessStatusCode();
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
 
+        // Arrange: Register and login to get a valid refresh token
+        string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
+
+        // Act: Attempt to login
         LoginRequestDto loginRequest = new() { Email = uniqueEmail, Password = "Password123!" };
         HttpResponseMessage loginResponse = await _client.PostAsJsonAsync("/Account/login", loginRequest, cancellationToken: TestContext.Current.CancellationToken);
-        _ = loginResponse.EnsureSuccessStatusCode();
 
         // Extract refresh token from login response
         LoginResponseDto? loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
@@ -139,8 +128,16 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         Assert.Equal(HttpStatusCode.OK, refreshResponse.StatusCode);
         LoginResponseDto? refreshContent = await refreshResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(refreshContent);
-        Assert.False(string.IsNullOrWhiteSpace(refreshContent.JwtToken));
+        Assert.False(string.IsNullOrWhiteSpace(refreshContent.Token));
         Assert.False(string.IsNullOrWhiteSpace(refreshContent.RefreshToken));
+    }
+
+    private async Task<HttpResponseMessage> LoginUserAsync(string uniqueEmail)
+    {
+        LoginRequestDto loginRequest = new() { Email = uniqueEmail, Password = "Password123!" };
+        HttpResponseMessage loginResponse = await _client.PostAsJsonAsync("/Account/login", loginRequest, cancellationToken: TestContext.Current.CancellationToken);
+        _ = loginResponse.EnsureSuccessStatusCode();
+        return loginResponse;
     }
 
     [Fact]
@@ -148,22 +145,28 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [Trait("Endpoint", "Refresh")]
     public async Task Refresh_RotatesToken_TokenChangesOnRefresh()
     {
-        // Register and login to get a refresh token
-        string email = $"refreshrot_{Guid.NewGuid()}@example.com";
-        RegisterRequestDto register = new() { Email = email, Password = "Password123!" };
-        HttpResponseMessage regResp = await _client.PostAsJsonAsync("/Account/register", register, cancellationToken: TestContext.Current.CancellationToken);
-        _ = regResp.EnsureSuccessStatusCode();
-        LoginRequestDto login = new() { Email = email, Password = "Password123!" };
-        HttpResponseMessage loginResp = await _client.PostAsJsonAsync("/Account/login", login, cancellationToken: TestContext.Current.CancellationToken);
-        _ = loginResp.EnsureSuccessStatusCode();
-        LoginResponseDto? loginContent = await loginResp.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
+
+        // Arrange: Register and login to get a valid refresh token
+        string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
+
+        // Arrange: Login to get refresh token
+        HttpResponseMessage loginResponse = await LoginUserAsync(uniqueEmail);
+
+        // Extract refresh token from login response
+        LoginResponseDto? loginContent = await loginResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(loginContent);
         string? oldRefreshToken = loginContent.RefreshToken;
-        // Refresh
+
+        // Act: Refresh the token
         RefreshTokenRequestDto refreshReq = new() { RefreshToken = oldRefreshToken! };
         HttpResponseMessage refreshResp = await _client.PostAsJsonAsync("/Account/refresh", refreshReq, cancellationToken: TestContext.Current.CancellationToken);
         _ = refreshResp.EnsureSuccessStatusCode();
         RefreshTokenResponseDto? refreshContent = await refreshResp.Content.ReadFromJsonAsync<RefreshTokenResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
         Assert.NotNull(refreshContent);
         Assert.NotEqual(oldRefreshToken, refreshContent.RefreshToken);
     }
@@ -173,12 +176,19 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [Trait("Endpoint", "Logout")]
     public async Task Logout_RevokesRefreshToken_CannotRefreshAfterLogout()
     {
-        // Register and login to get a refresh token
-        string email = $"logoutrevoke_{Guid.NewGuid()}@example.com";
-        RegisterRequestDto register = new() { Email = email, Password = "Password123!" };
-        HttpResponseMessage regResp = await _client.PostAsJsonAsync("/Account/register", register, cancellationToken: TestContext.Current.CancellationToken);
-        _ = regResp.EnsureSuccessStatusCode();
-        LoginRequestDto login = new() { Email = email, Password = "Password123!" };
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
+
+        // Arrange: Register and login to get a valid refresh token
+        string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
+
+        // Arrange: Login to get refresh token
+        _ = await LoginUserAsync(uniqueEmail);
+
+        // Login to get refresh token
+        LoginRequestDto login = new() { Email = uniqueEmail, Password = "Password123!" };
+
         HttpResponseMessage loginResp = await _client.PostAsJsonAsync("/Account/login", login, cancellationToken: TestContext.Current.CancellationToken);
         _ = loginResp.EnsureSuccessStatusCode();
         LoginResponseDto? loginContent = await loginResp.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
@@ -206,23 +216,43 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [Trait("Category", "EdgeCase")]
     [Trait("Endpoint", "Login")]
     [InlineData("notregistered@example.com", "Password123!", HttpStatusCode.Unauthorized)] // Unregistered user
-    [InlineData("testlogin@example.com", "WrongPassword", HttpStatusCode.Unauthorized)] // Wrong password
+    [InlineData("testlogin@example.com", "WrongPassword1!", HttpStatusCode.Unauthorized)] // Wrong password
     [InlineData("", "Password123!", HttpStatusCode.BadRequest)] // Empty email
     [InlineData("testlogin@example.com", "", HttpStatusCode.BadRequest)] // Empty password
     public async Task Login_EdgeCases_ReturnsExpectedStatus(string email, string password, HttpStatusCode expectedStatus)
     {
         // Arrange: Register a user for the wrong password/empty password/email cases
-        string testEmail = email;
         if (email == "testlogin@example.com")
         {
-            testEmail = $"testlogin_{Guid.NewGuid()}@example.com";
-            RegisterRequestDto registerRequest = new() { Email = testEmail, Password = "Password123!" };
-            HttpResponseMessage registerResponse = await _client.PostAsJsonAsync("/Account/register", registerRequest, cancellationToken: TestContext.Current.CancellationToken);
-            _ = registerResponse.EnsureSuccessStatusCode();
+            RegisterRequestDto registerRequest = new() { Email = email, Password = password };
+
+            // Login as admin to get JWT
+            LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+            Assert.NotNull(adminLoginContent);
+
+            HttpRequestMessage registerRequestMessage = new(HttpMethod.Post, "/Account/register")
+            {
+                Content = JsonContent.Create(registerRequest)
+            };
+            registerRequestMessage.Headers.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminLoginContent.Token);
+
+            HttpResponseMessage registerResponse = await _client.SendAsync(registerRequestMessage, TestContext.Current.CancellationToken);
+            // Only ensure success if password is not empty (valid registration)
+            if (!string.IsNullOrEmpty(password))
+            {
+                _ = registerResponse.EnsureSuccessStatusCode();
+            }
+            // If password is empty, expect registration to fail (BadRequest), but continue to test login
+        }
+
+        if (password == "WrongPassword1!")
+        {
+            password = "Password123!";
         }
 
         // Act
-        LoginRequestDto loginRequest = new() { Email = testEmail, Password = password };
+        LoginRequestDto loginRequest = new() { Email = email, Password = password };
         HttpResponseMessage loginResponse = await _client.PostAsJsonAsync("/Account/login", loginRequest, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
@@ -264,12 +294,55 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [InlineData("test3@example.com", "short", HttpStatusCode.BadRequest)] // Too short password
     public async Task Register_EdgeCases_ReturnsExpectedStatus(string email, string password, HttpStatusCode expectedStatus)
     {
-        // Arrange
-        RegisterRequestDto request = new() { Email = email, Password = password };
-        // Act
-        HttpResponseMessage response = await _client.PostAsJsonAsync("/Account/register", request, cancellationToken: TestContext.Current.CancellationToken);
-        // Assert
-        Assert.Equal(expectedStatus, response.StatusCode);
+        // Arrange: Login as admin to get JWT
+        LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
+        Assert.NotNull(adminLoginContent);
+
+        // Arrange: Register and login to get a valid refresh token
+        HttpResponseMessage registerResponse = await RegisterUserAsAdminAsync(adminLoginContent, email, password);
+        Assert.Equal(expectedStatus, registerResponse.StatusCode);
     }
+    #endregion
+
+    #region Helper Methods
+    private async Task<LoginResponseDto?> LoginAsAdminAsync()
+    {
+        // Arrange: Login as admin to get JWT
+        LoginRequestDto adminLogin = new() { Email = "admin@example.com", Password = "Password123!" };
+        HttpResponseMessage adminLoginResponse = await _client.PostAsJsonAsync("/Account/login", adminLogin, cancellationToken: TestContext.Current.CancellationToken);
+        _ = adminLoginResponse.EnsureSuccessStatusCode();
+        LoginResponseDto? adminLoginContent = await adminLoginResponse.Content.ReadFromJsonAsync<LoginResponseDto>(cancellationToken: TestContext.Current.CancellationToken);
+        Assert.NotNull(adminLoginContent);
+        Assert.False(string.IsNullOrWhiteSpace(adminLoginContent.Token));
+        return adminLoginContent;
+    }
+
+    private async Task<string> RegisterUserAsAdminAsync(LoginResponseDto adminLoginContent)
+    {
+        string uniqueEmail = $"testlogin_{Guid.NewGuid()}@example.com";
+        RegisterRequestDto registerRequest = new() { Email = uniqueEmail, Password = "Password123!" };
+        HttpRequestMessage registerRequestMessage = new(HttpMethod.Post, "/Account/register")
+        {
+            Content = JsonContent.Create(registerRequest)
+        };
+        registerRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminLoginContent.Token);
+        HttpResponseMessage registerResponse = await _client.SendAsync(registerRequestMessage, TestContext.Current.CancellationToken);
+        _ = registerResponse.EnsureSuccessStatusCode();
+        return uniqueEmail;
+    }
+
+    private async Task<HttpResponseMessage> RegisterUserAsAdminAsync(LoginResponseDto adminLoginContent, string email, string password)
+    {
+        RegisterRequestDto registerRequest = new() { Email = email, Password = password };
+        HttpRequestMessage registerRequestMessage = new(HttpMethod.Post, "/Account/register")
+        {
+            Content = JsonContent.Create(registerRequest)
+        };
+        registerRequestMessage.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", adminLoginContent.Token);
+        HttpResponseMessage registerResponse = await _client.SendAsync(registerRequestMessage, TestContext.Current.CancellationToken);
+        return registerResponse;
+    }
+
+
     #endregion
 }
