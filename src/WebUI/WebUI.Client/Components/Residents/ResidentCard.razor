@@ -45,158 +45,15 @@
                     <div class="row mt-2">
 
                         @* Medicine Section *@
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong class="small">Medicinstatus</strong>
-                        </div>
-                        @if (_medicineStatus is null)
-                        {
-                            <p class="small fst-italic text-muted">Indlæser medicinstatus...</p>
-                        }
-                        else if (!_medicineStatus.Medicine.Any())
-                        {
-                            <p class="small fst-italic text-muted">Ingen medicinregistreringer de sidste 24 timer</p>
-                        }
-                        else
-                        {
-                            <table class="table table-sm">
-
-                                @* Table header *@
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Medicin</th>
-                                        <th scope="col">Givet</th>
-                                        <th scope="col">Tidspunkt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (int i = 0; i < _medicineStatus.Medicine.Length; i++)
-                                    {
-                                        <tr>
-                                            <td>@_medicineStatus.Medicine[i]</td>
-                                            <td>@(_medicineStatus.Given[i] ? "Ja" : "Nej")</td>
-                                            <td>@_medicineStatus.Timestamps[i].ToString("HH:mm dd-MM-yyyy")</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
+                        <MedicineStatus MedicineStatusData="_medicineStatus" />
 
                         @* Painkiller Section *@
-                        <div class="d-flex justify-content-between align-items-center mb-1 mt-2">
-                            <strong class="small">Smertestillende</strong>
-                        </div>
-
-                        @if (_painkillerStatus is null)
-                        {
-                            <p class="small fst-italic text-muted">Indlæser smertestillende status...</p>
-                        }
-                        else
-                        {
-                            @* Next allowed time *@
-                            <p class="small mb-1">
-                                Næste tilladte tidspunkt:
-                                @_painkillerStatus.NextAllowedTime.ToString("HH:mm dd-MM-yyyy")
-                            </p>
-
-                            @* List of types *@
-                            @if (_painkillerStatus.Types.Any())
-                            {
-                                <ul class="list-group list-group-flush">
-                                    @foreach (string type in _painkillerStatus.Types)
-                                    {
-                                        <li class="list-group-item px-0 py-1 small">@type</li>
-                                    }
-                                </ul>
-                            }
-
-                            @* No painkillers *@
-                            else
-                            {
-                                <p class="small fst-italic text-muted">Ingen smertestillende registreret</p>
-                            }
-                        }
+                        <PainkillerStatus Status="_painkillerStatus" />
                     </div>
 
                     @* UC002 - Notes section *@
                     <div class="row mt-2">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <strong class="small">Noter</strong>
-                            <button class="btn btn-sm btn-outline-primary" @onclick="ToggleAddForm">+ Tilføj</button>
-                        </div>
-
-                        @* Feedback message *@
-                        @if (!string.IsNullOrEmpty(_feedbackMessage))
-                        {
-                            <div class="alert @_feedbackClass py-1 px-2 small mb-1" role="alert">
-                                @_feedbackMessage
-                            </div>
-                        }
-
-                        @* Add note form *@
-                        @if (_showAddForm)
-                        {
-                            <div class="mb-2">
-                                <textarea class="form-control form-control-sm mb-1" rows="2" placeholder="Skriv note her..."
-                                          @bind="_newNoteText"></textarea>
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-sm btn-primary" @onclick="AddNote">Gem</button>
-                                    <button class="btn btn-sm btn-secondary" @onclick="ToggleAddForm">Annullér</button>
-                                </div>
-                            </div>
-                        }
-
-                        @* Notes list *@
-                        @if (!Resident.Notes.Any())
-                        {
-                            <p class="small fst-italic text-muted">Ingen noter endnu</p>
-                        }
-                        else
-                        {
-                            <ul class="list-group list-group-flush">
-                                @foreach (ResidentNote note in Resident.Notes.OrderByDescending(n => n.EditedAt))
-                                {
-                                    <li class="list-group-item px-0 py-1">
-                                        @if (_editingNoteId == note.Id)
-                                        {
-                                            <textarea class="form-control form-control-sm mb-1" rows="2" @bind="_editNoteText"></textarea>
-                                            <div class="d-flex gap-1">
-                                                <button class="btn btn-sm btn-primary" @onclick="() => SaveEdit(note.Id)">Gem</button>
-                                                <button class="btn btn-sm btn-secondary" @onclick="CancelEdit">Annullér</button>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <p class="mb-0 small">@note.Note</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-muted">@note.EditedAt.ToString("HH:mm dd-MM-yyyy")</small>
-                                                <div class="d-flex gap-1">
-                                                    <button class="btn btn-sm btn-outline-secondary py-0"
-                                                            @onclick="() => StartEdit(note)">
-                                                        Rediger
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-danger py-0"
-                                                            @onclick="() => ConfirmDelete(note.Id)">
-                                                        Slet
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        }
-                                    </li>
-                                }
-                            </ul>
-                        }
-
-                        @* Delete confirmation *@
-                        @if (_confirmDeleteId.HasValue)
-                        {
-                            <div class="alert alert-warning py-1 px-2 mt-2 small">
-                                <p class="mb-1">Er du sikker på du vil slette denne note?</p>
-                                <div class="d-flex gap-1">
-                                    <button class="btn btn-sm btn-danger" @onclick="DeleteNote">Slet</button>
-                                    <button class="btn btn-sm btn-secondary" @onclick="CancelDelete">Annullér</button>
-                                </div>
-                            </div>
-                        }
+                        <NotesSection Resident="Resident" Notes="Resident.Notes.ToList()" />
                     </div>
 
                 </section>
@@ -205,4 +62,3 @@
 
     </div>
 </section>
-@* Code moved to ResidentCard.razor.cs (partial class) *@
