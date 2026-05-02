@@ -28,6 +28,7 @@ public partial class ResidentCard : ComponentBase
     [Inject]
     private IResidentNoteService ResidentNoteService { get; set; } = default!;
 
+    [Inject]
     private IMedicineStatusService MedicineStatusService { get; set; } = default!;
 
 
