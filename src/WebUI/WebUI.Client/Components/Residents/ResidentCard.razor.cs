@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Team6. All rights reserved.
 // No warranty, explicit or implicit, provided.
 
-using System.Net.Http.Json;
-
 using Core.DTOs;
 using Core.Interfaces.Services;
 
@@ -12,7 +10,7 @@ using Domain.Enums;
 
 using Microsoft.AspNetCore.Components;
 
-namespace WebUI.Components.Residents;
+namespace WebUI.Client.Components.Residents;
 
 public partial class ResidentCard : ComponentBase
 {
