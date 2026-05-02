@@ -25,7 +25,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register a new user to be deleted
+        // Arrange: CreateAccountAsync a new user to be deleted
         string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         GetUserIdByEmailRequestDto content = new() { Email = uniqueEmail };
@@ -51,14 +51,14 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
 
     [Fact]
     [Trait("Category", "Functionality")]
-    [Trait("Endpoint", "Register")]
+    [Trait("Endpoint", "CreateAccountAsync")]
     public async Task Register_ValidRequest_ReturnsOk()
     {
         // Arrange: Login as admin to get JWT
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         _ = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Arrange: Use a different unique email for the test registration
@@ -86,7 +86,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Act: Attempt to login
@@ -120,7 +120,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Act: Attempt to login
@@ -141,7 +141,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Act: Attempt to login
@@ -184,7 +184,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Arrange: Login to get refresh token
@@ -215,7 +215,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         string uniqueEmail = await RegisterUserAsAdminAsync(adminLoginContent);
 
         // Arrange: Login to get refresh token
@@ -256,7 +256,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
     [InlineData("testlogin@example.com", "", HttpStatusCode.BadRequest)] // Empty password
     public async Task Login_EdgeCases_ReturnsExpectedStatus(string email, string password, HttpStatusCode expectedStatus)
     {
-        // Arrange: Register a user for the wrong password/empty password/email cases
+        // Arrange: CreateAccountAsync a user for the wrong password/empty password/email cases
         if (email == "testlogin@example.com")
         {
             RegisterRequestDto registerRequest = new() { Email = email, Password = password };
@@ -322,7 +322,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
 
     [Theory]
     [Trait("Category", "EdgeCase")]
-    [Trait("Endpoint", "Register")]
+    [Trait("Endpoint", "CreateAccountAsync")]
     [InlineData("", "Password123!", HttpStatusCode.BadRequest)] // Empty email
     [InlineData("test2@example.com", "", HttpStatusCode.BadRequest)] // Empty password
     [InlineData("not-an-email", "Password123!", HttpStatusCode.BadRequest)] // Invalid email format
@@ -333,7 +333,7 @@ public class AccountControllerTests(CustomWebApplicationFactory<Api.Program> fac
         LoginResponseDto? adminLoginContent = await LoginAsAdminAsync();
         Assert.NotNull(adminLoginContent);
 
-        // Arrange: Register and login to get a valid refresh token
+        // Arrange: CreateAccountAsync and login to get a valid refresh token
         HttpResponseMessage registerResponse = await RegisterUserAsAdminAsync(adminLoginContent, email, password);
         Assert.Equal(expectedStatus, registerResponse.StatusCode);
     }

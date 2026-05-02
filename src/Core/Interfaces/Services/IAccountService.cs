@@ -50,5 +50,5 @@ public interface IAccountService
     /// </summary>
     /// <param name="logoutRequestDto">A logout request containing session or token information.</param>
     /// <returns>A response indicating the result of the logout operation.</returns>
-    Task<LogoutResponseDto> LogoutAsync(LogoutRequestDto logoutRequestDto);
+    Task<ILogoutResult> LogoutAsync(LogoutRequestDto logoutRequestDto);
 }
