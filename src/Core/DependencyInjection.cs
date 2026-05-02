@@ -20,7 +20,7 @@ public static class DependencyInjection
         //_ = services.AddScoped<IMedicineRecordService, MedicineRecordService>(); // This service is currently not implemented, so it's commented out to avoid confusion.
         // _ = services.AddScoped<IPainkillerRecordService, PainkillerRecordService>(); // This service is currently not implemented, so it's commented out to avoid confusion.
         _ = services.AddScoped<IAccountService, AccountService>();
-       
+        _ = services.AddScoped<ITokenService, TokenService>();
 
         _ = services.AddScoped<IPhoneAssignmentService, PhoneAssignmentService>();
         _ = services.AddScoped<IAccountService, AccountService>();

@@ -5,14 +5,23 @@
   <header class="navbar navbar-expand-lg navbar-light bg-light">
   </header>
 
-  <main class="container mt-4 flex-fill">
-    @Body
 
-    <div id="blazor-error-ui">
-      An unhandled error has occurred.
-      <a href="" class="reload">Reload</a>
-      <a class="dismiss">🗙</a>
-    </div>
+  <main class="container mt-4 flex-fill">
+    <ErrorBoundary>
+      <ChildContent>
+        @Body
+      </ChildContent>
+      <ErrorContent>
+        <div id="blazor-error-ui" class="alert alert-danger mt-4">
+          <h5>An unhandled error has occurred.</h5>
+          <p><b>Message:</b> @context.Message</p>
+          <p><b>Stack Trace:</b></p>
+          <pre style="white-space: pre-wrap;">@context.StackTrace</pre>
+          <a href="" class="reload">Reload</a>
+          <a class="dismiss">🗙</a>
+        </div>
+      </ErrorContent>
+    </ErrorBoundary>
 
     <!-- Browser Refresh script for development hot reload -->
     <script src="/_framework/aspnetcore-browser-refresh.js"></script>

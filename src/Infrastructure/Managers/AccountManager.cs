@@ -4,6 +4,7 @@
 using System.Net.Http.Json;
 
 using Core.DTOs.Identity;
+using Core.Interfaces.Dto.Identity;
 using Core.Interfaces.Managers;
 
 namespace Infrastructure.Managers;
@@ -64,26 +65,22 @@ public class AccountManager : IAccountManager
     /// <remarks>
     /// Returns a failed response if the backend response cannot be parsed.
     /// </remarks>
-    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto loginRequestDto)
+    public async Task<ILoginResult> LoginAsync(LoginRequestDto loginRequestDto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/login", loginRequestDto);
         try
         {
             return await response.Content.ReadFromJsonAsync<LoginResponseDto>() is LoginResponseDto loginResponseDto
                 ? loginResponseDto
-                : new LoginResponseDto
+                : new ErrorDto
                 {
-                    JwtToken = null,
-                    RefreshToken = null,
                     ErrorMessages = ["Failed to parse login response."]
                 };
         }
         catch (System.Text.Json.JsonException)
         {
-            return new LoginResponseDto
+            return new ErrorDto
             {
-                JwtToken = null,
-                RefreshToken = null,
                 ErrorMessages = ["Failed to parse login response."]
             };
         }
@@ -97,23 +94,21 @@ public class AccountManager : IAccountManager
     /// <remarks>
     /// Returns a failed response if the backend response cannot be parsed.
     /// </remarks>
-    public async Task<LogoutResponseDto> LogoutAsync(LogoutRequestDto logoutRequestDto)
+    public async Task<ILogoutResult> LogoutAsync(LogoutRequestDto logoutRequestDto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/logout", logoutRequestDto);
         try
         {
-            LogoutResponseDto? logoutResponseDto = await response.Content.ReadFromJsonAsync<LogoutResponseDto>();
-            return logoutResponseDto ?? new LogoutResponseDto
+            ILogoutResult? logoutResponseDto = await response.Content.ReadFromJsonAsync<LogoutResponseDto>();
+            return logoutResponseDto ?? new ErrorDto
             {
-                IsSuccessful = false,
                 ErrorMessages = ["Failed to parse logout response."]
             };
         }
         catch (System.Text.Json.JsonException)
         {
-            return new LogoutResponseDto
+            return new ErrorDto
             {
-                IsSuccessful = false,
                 ErrorMessages = ["Failed to parse logout response."]
             };
         }
@@ -151,6 +146,33 @@ public class AccountManager : IAccountManager
     }
 
     public Task<RegistrationResponseDto> CreateAccountAsync(RegisterRequestDto registrationRequestDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    async Task<ILoginResult> IAccountManager.LoginAsync(LoginRequestDto loginRequestDto)
+    {
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/login", loginRequestDto);
+        try
+        {
+            LoginResponseDto? loginResponseDto = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+            return loginResponseDto != null
+                ? loginResponseDto
+                : new ErrorDto
+                {
+                    ErrorMessages = ["Failed to parse login response."]
+                };
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return new ErrorDto
+            {
+                ErrorMessages = ["Failed to parse login response."]
+            };
+        }
+    }
+
+    Task<ILogoutResult> IAccountManager.LogoutAsync(LogoutRequestDto logoutRequestDto)
     {
         throw new NotImplementedException();
     }
