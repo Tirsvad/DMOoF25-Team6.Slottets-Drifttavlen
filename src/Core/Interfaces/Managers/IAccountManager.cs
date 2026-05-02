@@ -30,7 +30,7 @@ public interface IAccountManager
     /// </summary>
     /// <param name="logoutRequestDto">An object containing the logout request details.</param>
     /// <returns>A response object containing the result of the logout operation.</returns>
-    Task<LogoutResponseDto> LogoutAsync(LogoutRequestDto logoutRequestDto);
+    Task<ILogoutResult> LogoutAsync(LogoutRequestDto logoutRequestDto);
 
     /// <summary>
     /// Refreshes the authentication token for a user session.

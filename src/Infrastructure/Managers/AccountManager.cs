@@ -94,23 +94,21 @@ public class AccountManager : IAccountManager
     /// <remarks>
     /// Returns a failed response if the backend response cannot be parsed.
     /// </remarks>
-    public async Task<LogoutResponseDto> LogoutAsync(LogoutRequestDto logoutRequestDto)
+    public async Task<ILogoutResult> LogoutAsync(LogoutRequestDto logoutRequestDto)
     {
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/Account/logout", logoutRequestDto);
         try
         {
-            LogoutResponseDto? logoutResponseDto = await response.Content.ReadFromJsonAsync<LogoutResponseDto>();
-            return logoutResponseDto ?? new LogoutResponseDto
+            ILogoutResult? logoutResponseDto = await response.Content.ReadFromJsonAsync<LogoutResponseDto>();
+            return logoutResponseDto ?? new ErrorDto
             {
-                IsSuccessful = false,
                 ErrorMessages = ["Failed to parse logout response."]
             };
         }
         catch (System.Text.Json.JsonException)
         {
-            return new LogoutResponseDto
+            return new ErrorDto
             {
-                IsSuccessful = false,
                 ErrorMessages = ["Failed to parse logout response."]
             };
         }
@@ -172,5 +170,10 @@ public class AccountManager : IAccountManager
                 ErrorMessages = ["Failed to parse login response."]
             };
         }
+    }
+
+    Task<ILogoutResult> IAccountManager.LogoutAsync(LogoutRequestDto logoutRequestDto)
+    {
+        throw new NotImplementedException();
     }
 }

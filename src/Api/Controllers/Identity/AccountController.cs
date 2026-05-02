@@ -244,9 +244,8 @@ public class AccountController(
         string? refreshToken = Request.Headers["X-Refresh-Token"].FirstOrDefault() ?? request.RefreshToken;
         if (string.IsNullOrWhiteSpace(refreshToken))
         {
-            return BadRequest(new LogoutResponseDto
+            return BadRequest(new ErrorDto
             {
-                IsSuccessful = false,
                 ErrorMessages = ["Refresh token required for logout."]
             });
         }
